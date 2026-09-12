@@ -1,0 +1,110 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./pawlingo.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  species   String // "cat", "dog", "bird", "human", etc.
+  breed     String?
+  avatar    String?
+  bio       String?
+  bioPS     String? // Bio in PawScript
+  type      String   @default("animal") // "animal" or "human"
+  age       Int?
+  gender    String?
+  location  String?
+  createdAt DateTime @default(now())
+
+  posts        Post[]
+  reactions    Reaction[]
+  comments     Comment[]
+  sentMsgs     Message[]     @relation("sender")
+  receivedMsgs Message[]     @relation("receiver")
+  matchProfile MatchProfile?
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  imageUrl  String?
+  caption   String?
+  captionPS String? // Caption in PawScript
+  type      String   @default("photo") // "photo", "reel", "story"
+  createdAt DateTime @default(now())
+
+  reactions Reaction[]
+  comments  Comment[]
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  type      String // "paw", "bone", "fish", "feather", "zoomies", "laugh"
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  contentPS String? // Comment in PawScript
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  contentPS  String?
+  senderId   String
+  sender     User     @relation("sender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
+  type       String   @default("text") // "text", "voice", "image", "pawscript"
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model MatchProfile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id])
+  lookingFor  String? // "companion", "mate", "playmate", "partner"
+  temperament String? // "playful", "calm", "energetic", "shy"
+  diet        String?
+  vaccinated  Boolean @default(false)
+  neutered    Boolean @default(false)
+  aboutMe     String?
+  aboutMePS   String?
+  interests   String? // JSON array as string
+  createdAt   DateTime @default(now())
+
+  likes   Match[] @relation("liker")
+  likedBy Match[] @relation("liked")
+}
+
+model Match {
+  id        String       @id @default(cuid())
+  likerId   String
+  liker     MatchProfile @relation("liker", fields: [likerId], references: [id])
+  likedId   String
+  liked     MatchProfile @relation("liked", fields: [likedId], references: [id])
+  matched   Boolean      @default(false)
+  createdAt DateTime     @default(now())
+
+  @@unique([likerId, likedId])
+}
