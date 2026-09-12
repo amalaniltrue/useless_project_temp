@@ -162,8 +162,15 @@ For Hardware:
 
 ### Project Demo
 # Video
-[Add your demo video link here]
-*Demonstrates unlocking PawPad Pro, swiping through PawReels video clips, launching the PawOS desktop with BarkShell CLI, soothing with Purrify acoustic sound therapy, chatting with PawLLM in English and PawScript, and swiping on PawMatch dating profiles.*
+
+| Video Demo | Feature Focus | Walkthrough Highlights |
+| :--- | :--- | :--- |
+| [▶️ **Watch Demo 1: PawScript Bioacoustics**](videos/01_pawscript_bioacoustics_demo.webm) | **PawScript Bioacoustics V2 & Phonetics Engine** | Full walkthrough of the 16-rune animal alphabet, real-time bioacoustic synthesis, live natural speech to PawScript translator, typing pad, and audio oscillator playback. |
+| [▶️ **Watch Demo 2: PawSearch Scent Engine**](videos/02_pawsearch_scent_engine_demo.webm) | **PawSearch Olfactory Scent Engine & Navigation** | Demonstrates searching in runic PawScript glyphs, query translation to English web results, phonetic transcriptions, and biological animal sound sample playback. |
+| [▶️ **Watch Demo 3: PetGram & PawReels**](videos/03_petgram_pawreels_demo.webm) | **PetGram & PawReels Short-Form Video Feed** | Demonstrates vertical 9:16 video reels doomscrolling, synchronized audio tracks, live PawScript comment streams, bone & paw reactions, and app navigation. |
+
+> [!NOTE]
+> All screencast recordings are captured in full high-definition (1859x896) on the live PawPad Pro / PawOS environment and stored in the [`videos/`](videos/) directory.
 
 # Additional Demos
 - Live Local Web Server: `http://localhost:3000`
