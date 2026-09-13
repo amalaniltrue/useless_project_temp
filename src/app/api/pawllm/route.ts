@@ -3,7 +3,7 @@ import { translateToPawScript } from '@/lib/pawscript';
 import { PET_PERSONAS, generatePawLLMReply } from '@/lib/pawllm';
 
 // =========================================================================
-// Local Ollama Bridge & Embedded PawLLM API Route v2.5
+// Local Ollama Bridge & Embedded PawLLM API Route v2.6 (Mistral First)
 // =========================================================================
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
@@ -49,16 +49,17 @@ export async function GET() {
   const ollama = await checkOllama();
   return NextResponse.json({
     status: 'online',
-    engine: 'PawLLM Bio-Acoustic Neural Engine v2.5',
+    engine: 'PawLLM Bio-Acoustic Neural Engine v2.6',
     embeddedActive: true,
     ollamaBridge: {
       host: OLLAMA_HOST,
       online: ollama.online,
       models: ollama.models,
-      recommendedLocalModels: ['llama3.2:1b', 'qwen2.5:0.5b', 'mistral', 'tinyllama', 'phi3'],
+      preferredModel: 'mistral',
+      supportedModels: ['mistral:7b', 'mistral-nemo', 'llama3.2:1b', 'qwen2.5:0.5b', 'tinyllama'],
     },
     specs: {
-      architecture: 'Local On-Device Hybrid Transformer + Local Ollama Daemon Bridge',
+      architecture: 'Local Hybrid Mistral/Ollama + On-Device Bioacoustic Engine',
       contextWindow: 4096,
       quantization: '4-bit INT4 WebAssembly / Local GPU',
       pawscriptAlphabetSize: 16,
@@ -77,22 +78,39 @@ export async function POST(req: Request) {
     // 1. Check if local Ollama daemon is available and running
     const ollama = await checkOllama();
     if (ollama.online && ollama.models.length > 0) {
+      // Prioritize Mistral first!
       const selectedModel =
-        ollama.models.find((m) =>
-          m.includes('llama3.2') || m.includes('qwen') || m.includes('mistral') || m.includes('tinyllama')
-        ) || ollama.models[0];
+        ollama.models.find((m) => m.toLowerCase().includes('mistral')) ||
+        ollama.models.find(
+          (m) =>
+            m.toLowerCase().includes('llama3.2') ||
+            m.toLowerCase().includes('qwen') ||
+            m.toLowerCase().includes('tinyllama') ||
+            m.toLowerCase().includes('phi')
+        ) ||
+        ollama.models[0];
+
+      const isCat = persona.species === 'Cat';
+      const soundWord = isCat ? 'meo' : 'bow';
 
       const systemPrompt = `
-${persona.systemPrompt}
-You are chatting with your trusted human in the PawChat app on PawOS.
-You know the ancient phonetic language of animals called "PawScript", which uses runic glyphs (such as ᛗᛖᐱ for meow, ᚱᚱᚱ for purr, ᛒᐱᚢ for bark, ᚹᚢᚠ for woof, ᚳᚱᛈ for chirp, ᚺᛁᛋ for hiss, ᚪᚹᚢ for howl).
-Always stay completely in character.
-You MUST output your reply in valid JSON format:
+You are a REAL domestic ${persona.species.toUpperCase()} named ${persona.name} (${persona.breed}).
+You are reacting directly to your human.
+
+STRICT BEHAVIOR RULES:
+1. THINK & ACT LIKE A REAL ANIMAL: Focus ONLY on realistic animal instincts (smells, food, treats, naps, ear scratches, sudden noises, toys, tail wags, purring).
+2. VERY SHORT ANSWERS: Maximum 1 to 2 short sentences (UNDER 15 WORDS TOTAL). Never write long human paragraphs!
+3. USE ANIMAL SOUNDS IN BETWEEN WORDS: You MUST naturally use "${soundWord}" or "${soundWord} ${soundWord}" in between your words.
+   - Example for Cat: "meo... tuna smells so good, give me some, meo!"
+   - Example for Dog: "bow bow! ball in your hand? throw it now, bow!"
+4. BE REALISTIC: Keep it natural, cute, simple, and instinctive.
+
+You MUST reply in valid raw JSON format:
 {
-  "english": "Your conversational reply in English with natural animal vocal sounds included. Keep it fun, punchy, and affectionate (1-3 sentences).",
-  "emotion": "Dominant emotion e.g. Joyful, Aristocratic, Zoomies, Mischief"
+  "english": "Very short realistic pet response with '${soundWord}' in between words (under 15 words).",
+  "emotion": "Short emotion e.g. Hungry, Sleepy, Playful, Alert"
 }
-Do not output markdown codeblocks, just raw JSON.
+Do not output markdown codeblocks. Output only raw JSON.
 `;
 
       const formattedMessages = [
@@ -117,7 +135,7 @@ Do not output markdown codeblocks, just raw JSON.
             stream: false,
             options: {
               temperature: 0.7,
-              num_predict: 128,
+              num_predict: 64, // Keep it short and snappy
             },
           }),
         });
@@ -132,22 +150,21 @@ Do not output markdown codeblocks, just raw JSON.
             const clean = content.replace(/```json/g, '').replace(/```/g, '').trim();
             parsed = JSON.parse(clean);
           } catch {
-            parsed = { english: content, emotion: 'Chatty' };
+            parsed = { english: content, emotion: isCat ? 'Purring' : 'Wagging' };
           }
 
           if (parsed.english) {
             const english = parsed.english;
             const pawscript = translateToPawScript(english);
-            const isCat = persona.species === 'Cat';
-            const audioCue = isCat ? '/sounds/animals/cat/cat_purr.mp3' : '/sounds/animals/dog/dog_bark_play.mp3';
+            const audioCue = isCat ? '/sounds/animals/cat/cat_meow_standard.mp3' : '/sounds/animals/dog/dog_bark_play.mp3';
 
             return NextResponse.json({
               english,
               pawscript,
-              ipa: isCat ? '[mʲe.oʊ̯] • ' + (parsed.emotion || 'Content') : '[bɑːrk] • ' + (parsed.emotion || 'Excited'),
+              ipa: isCat ? `[mʲe.oʊ̯] • ${parsed.emotion || 'Meo'}` : `[bɑːrk] • ${parsed.emotion || 'Bow'}`,
               emotion: parsed.emotion || (isCat ? 'Purring' : 'Tail Wagging'),
               audioCue,
-              modelUsed: `Local Ollama (${selectedModel})`,
+              modelUsed: `Local Mistral/Ollama (${selectedModel})`,
               latencyMs: Date.now() - startTime,
               tokensGenerated: Math.ceil((english.length + pawscript.length) / 4),
             });
@@ -158,7 +175,7 @@ Do not output markdown codeblocks, just raw JSON.
       }
     }
 
-    // 2. High-performance Embedded PawLLM Server Synthesis
+    // 2. High-performance Embedded PawLLM Server Synthesis (Realistic & Short)
     const reply = await generatePawLLMReply(contactId, userMessage, history);
     return NextResponse.json(reply);
   } catch (err) {

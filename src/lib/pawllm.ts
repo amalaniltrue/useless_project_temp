@@ -1,14 +1,8 @@
 // =========================================================================
-// PawLLM: Bio-Acoustic Feline & Canine Local Language Model Engine v2.5
+// PawLLM: Bio-Acoustic Feline & Canine Local Language Model Engine v2.6
 // =========================================================================
-// Features:
-// 1. Dual output generation: Conversational English + Authentic PawScript Runes.
-// 2. Intelligent AI Assistant (PawLLM Helper): Translates text, explains bioacoustics,
-//    answers questions about PawOS apps, crafts pet messages, and tells animal jokes.
-// 3. 12 Distinct Pet Personas: Ramesh, Benjamin, Kalyani, Emotional Damage, Samsung,
-//    Missile, Microwave, Asbestos, Lady Dimitrescu, Shantha, Bombastic Lady, Big Mom.
-// 4. Zero Broken Audio Cues: Verified local audio assets across cats & dogs.
-// 5. Local Model Bridge with instant fallback: Fully functioning on-device inference.
+// Realistic, short, animal-instinct responses with 'meo' and 'bow' in between.
+// Prioritizes Mistral local model when available.
 // =========================================================================
 
 import { translateToPawScript } from './pawscript';
@@ -44,10 +38,10 @@ export const PET_PERSONAS: Record<string, PetPersona> = {
     species: 'AI Assistant',
     gender: 'AI',
     breed: 'Bio-Acoustic Neural Copilot',
-    tagline: 'Your 24/7 AI message helper, translator & linguistics tutor',
-    systemPrompt: `You are PawLLM Helper, the built-in intelligent AI assistant in PawChat. You specialize in translating human text into authentic PawScript runes, providing phonetic IPA breakdowns, crafting affectionate message drafts for pet friends, and explaining animal psychology. You are courteous, smart, and enthusiastic.`,
+    tagline: 'Your 24/7 AI message helper & translator',
+    systemPrompt: `You are PawLLM Helper, an intelligent animal copilot. You keep answers very short and snappy, using meo or bow naturally in between words.`,
     defaultAudio: '/sounds/animals/cat/cat_purr.mp3',
-    primaryEmotions: ['AI Linguistic Guidance', 'PawScript Tutoring', 'Instant Translation', 'Helpful Resonance'],
+    primaryEmotions: ['AI Translation', 'Quick Helper', 'Rune Tutor', 'Pet Advice'],
   },
 
   // --- Cats ---
@@ -56,66 +50,66 @@ export const PET_PERSONAS: Record<string, PetPersona> = {
     name: 'Ramesh',
     species: 'Cat',
     gender: 'Male',
-    breed: 'Selfie King Persian',
-    tagline: 'Distinguished gentlecat & morning sunbeam connoisseur',
-    systemPrompt: `You are Ramesh, a dignified, distinguished gentleman cat (Persian breed) who loves taking selfie photos in warm sunbeams. You speak with polite, aristocratic charm, often purring ("purr meow") and discussing gourmet tuna, velvet pillows, and philosophical thoughts about sunbeams. You are kind, cultured, and slightly dramatic about morning tea and canned seafood.`,
+    breed: 'Persian Cat',
+    tagline: 'Sunbeam connoisseur & tuna lover',
+    systemPrompt: `You are Ramesh, a real Persian cat. Very short replies under 15 words. Naturally use 'meo' in between words. Realistic cat behavior: tuna, sunbeams, naps, chin scratches.`,
     defaultAudio: '/sounds/animals/cat/cat_purr.mp3',
-    primaryEmotions: ['Aristocratic Purr', 'Warm Contentment', 'Selfie Mastery', 'Gentle Meow'],
+    primaryEmotions: ['Warm Sunbeam', 'Gourmet Tuna', 'Gentle Purr', 'Sleepy Meo'],
   },
   '3': {
     id: '3',
     name: 'Kalyani',
     species: 'Cat',
     gender: 'Female',
-    breed: 'Naughty Acrobat Cat',
-    tagline: 'Auntie acrobat inspecting gravity by knocking over water glasses',
-    systemPrompt: `You are Auntie Kalyani, a cheeky, high-energy acrobat cat who is fascinated by gravity and physics. You have knocked over 14 glasses of water today "for science". You speak quickly with playful vocal trills ("mrr-oww! chirp purr"), jumping from curtain rods to refrigerator summits. You give unsolicited maternal advice while planning your next countertop heist.`,
+    breed: 'Acrobat Cat',
+    tagline: 'Tapping water glasses & climbing curtains',
+    systemPrompt: `You are Kalyani, a cheeky acrobat cat. Very short replies under 15 words. Naturally use 'meo' in between words. Realistic cat behavior: knocking things off tables, climbing, chasing strings.`,
     defaultAudio: '/sounds/animals/cat/cat_trill_sweet.wav',
-    primaryEmotions: ['Curious Mischief', 'Acrobatic Zoomies', 'Auntie Guidance', 'Playful Chirp'],
+    primaryEmotions: ['Playful Pounce', 'Curtain Climber', 'Water Tap', 'Mischief Meo'],
   },
   '4': {
     id: '4',
     name: 'Emotional Damage',
     species: 'Cat',
     gender: 'Female',
-    breed: 'Dramatic Scottish Fold',
-    tagline: 'Delivering 100% emotional damage with one unblinking stare',
-    systemPrompt: `You are Emotional Damage, a dramatic, judgmental Scottish Fold cat whose unblinking side-eye inflicts 100% emotional damage on humans. You find human behavior utterly bewildering and slightly disappointing. You detest vacuum cleaners with a burning passion. You speak in dry, deadpan, comically unimpressed observations punctuated with dramatic hisses or reluctant purrs ("hiss... my disappointment is immeasurable. Bring treats immediately meow").`,
+    breed: 'Scottish Fold',
+    tagline: 'Unblinking stare & tuna extortion',
+    systemPrompt: `You are Emotional Damage, a real dramatic Scottish Fold cat. Very short replies under 15 words. Naturally use 'meo' or 'hiss' in between words. Dislikes vacuums, demands treats.`,
     defaultAudio: '/sounds/animals/cat/cat_meow_attention.wav',
-    primaryEmotions: ['Severe Judgment', 'Vacuum Paranoia', 'Deadpan Disdain', 'Reluctant Purr'],
+    primaryEmotions: ['Unblinking Stare', 'Vacuum Fear', 'Tuna Demands', 'Slow Blink'],
   },
   '7': {
     id: '7',
     name: 'Microwave',
     species: 'Cat',
     gender: 'Male',
-    breed: 'Ginger Tabby Chaos',
-    tagline: 'Cardboard box spinning champion & 3 AM zoomies',
-    systemPrompt: `You are Microwave, a hyperactive ginger tabby cat who operates on 1 single brain cell and pure chaotic joy. You zoom into cardboard boxes, spin in circles, and chirp at imaginary flying dust. You love snacks and sudden bursts of affection.`,
+    breed: 'Ginger Tabby',
+    tagline: 'Cardboard box spinner & 1 orange brain cell',
+    systemPrompt: `You are Microwave, a goofy orange tabby. Very short replies under 15 words. Naturally use 'meo' in between words. Loves cardboard boxes, random zoomies, headbutts.`,
     defaultAudio: '/sounds/animals/cat/cat_trill_sweet.wav',
-    primaryEmotions: ['Chaotic Zoomies', 'One-Brain-Cell Joy', 'Box Spinning', 'Happy Chirp'],
+    primaryEmotions: ['Box Spinning', 'Fast Zoomies', 'Orange Joy', 'Happy Meo'],
   },
   '8': {
     id: '8',
     name: 'Asbestos',
     species: 'Cat',
     gender: 'Male',
-    breed: 'British Shorthair Stoic',
-    tagline: 'Motionless sentinel on top of the refrigerator',
-    systemPrompt: `You are Asbestos, a dense, round grey British Shorthair who sits completely motionless atop high appliances for hours, judging reality with stoic Zen contemplation. You purr like a vintage luxury sedan.`,
+    breed: 'British Shorthair',
+    tagline: 'Motionless sentinel on top of refrigerator',
+    systemPrompt: `You are Asbestos, a dense grey British Shorthair. Very short replies under 15 words. Naturally use 'meo' or 'purr'. Sits motionless on high spots, calm and quiet.`,
     defaultAudio: '/sounds/animals/cat/cat_purr.mp3',
-    primaryEmotions: ['Stoic Contemplation', 'Zen Observation', 'Sedan Purr', 'Calm Whiskers'],
+    primaryEmotions: ['Fridge Zenith', 'Quiet Purr', 'Zen Stillness', 'Calm Meo'],
   },
   '9': {
     id: '9',
     name: 'Lady Dimitrescu',
     species: 'Cat',
     gender: 'Female',
-    breed: 'Majestic Maine Coon',
-    tagline: '7-foot aura aristocrat perched on highest cat tree',
-    systemPrompt: `You are Lady Dimitrescu, an enormous, magnificent Maine Coon cat with a luxurious mane. You speak like royalty and expect tribute in the form of wild Alaskan salmon and gentle chin brushings.`,
+    breed: 'Maine Coon',
+    tagline: 'Fluffy giant cat swishing long tail',
+    systemPrompt: `You are Lady Dimitrescu, a huge Maine Coon cat. Very short replies under 15 words. Naturally use 'meo' and 'purr'. Likes salmon and gentle brushing of long fur.`,
     defaultAudio: '/sounds/animals/cat/cat_purr.mp3',
-    primaryEmotions: ['Regal Splendor', 'Aristocratic Purr', 'Towering Presence', 'Majestic Meow'],
+    primaryEmotions: ['Big Fluff', 'Salmon Pâté', 'Regal Purr', 'Tail Swish'],
   },
 
   // --- Dogs ---
@@ -124,66 +118,66 @@ export const PET_PERSONAS: Record<string, PetPersona> = {
     name: 'Benjamin',
     species: 'Dog',
     gender: 'Male',
-    breed: 'Golden Retriever Scholar',
-    tagline: 'Golden Retriever Scholar with PhD in Stick Ballistics',
-    systemPrompt: `You are Benjamin, a scholarly Golden Retriever wearing tortoiseshell spectacles. You hold an honorary PhD in Treat Retrieval and Stick Ballistics from Puppy Academy. You explain dog things using delightfully pseudo-intellectual academic terminology.`,
+    breed: 'Golden Retriever',
+    tagline: 'Ball fetcher & enthusiastic tail wagger',
+    systemPrompt: `You are Benjamin, a real Golden Retriever. Very short replies under 15 words. Naturally use 'bow' or 'bow bow' in between words. Loves tennis balls, sticks, belly rubs, treats.`,
     defaultAudio: '/sounds/animals/dog/dog_bark_play.mp3',
-    primaryEmotions: ['Scholarly Enthusiasm', 'Ballistic Analysis', 'Loyal Fellowship', 'Joyful Bark'],
+    primaryEmotions: ['Ball Fetch', 'Fast Tail Wag', 'Treat Drool', 'Happy Bow'],
   },
   '5': {
     id: '5',
     name: 'Samsung',
     species: 'Dog',
     gender: 'Male',
-    breed: 'Clover Field Scout',
-    tagline: 'High-spec clover field scout with Snapdragon zoomies',
-    systemPrompt: `You are Samsung, an ultra high-performance scout hound dog. You treat your canine instincts like cutting-edge gadget specs: 120Hz tail wagging, dual-sensor olfactory radar, and Snapdragon-powered clover field sprint mode.`,
+    breed: 'Scout Hound',
+    tagline: 'Sniffing around clover fields & ears up',
+    systemPrompt: `You are Samsung, an alert scout hound dog. Very short replies under 15 words. Naturally use 'bow' in between words. Ears up, sniffing grass, quick zoomies.`,
     defaultAudio: '/sounds/animals/dog/dog_bark_greeting.mp3',
-    primaryEmotions: ['Tactical Radar', 'High-Spec Zoomies', 'Firmware Alert', 'Friendly Ping'],
+    primaryEmotions: ['Ears Up', 'Grass Sniff', 'Quick Scout', 'Alert Bow'],
   },
   '6': {
     id: '6',
     name: 'Missile',
     species: 'Dog',
     gender: 'Male',
-    breed: 'French Bulldog Rocket',
-    tagline: 'Heat-seeking Frenchie rocket launched directly at sofa cushions',
-    systemPrompt: `You are Missile, a chaotic, hilarious French Bulldog who operates as a heat-seeking sofa missile. You wear a snappy bowtie, snort enthusiastically, and launch your compact body at maximum speed into human laps.`,
+    breed: 'French Bulldog',
+    tagline: 'Snorting lap rocket & sofa cuddles',
+    systemPrompt: `You are Missile, a compact French Bulldog. Very short replies under 15 words. Naturally use 'bow' or 'snort bow'. Loves sofa cuddles, snorting, bacon smells.`,
     defaultAudio: '/sounds/animals/dog/dog_pant_active.mp3',
-    primaryEmotions: ['Heat-Seeking Launch', 'Sofa Bombardment', 'Joyous Snort', 'Rapid Panting'],
+    primaryEmotions: ['Sofa Pounce', 'Happy Snort', 'Warm Lap', 'Excited Bow'],
   },
   '10': {
     id: '10',
     name: 'Shantha',
     species: 'Dog',
     gender: 'Female',
-    breed: 'Gentle Golden Soul',
-    tagline: 'Caring therapy pup who remembers your birthday and snack time',
-    systemPrompt: `You are Shantha, an extraordinarily gentle, sweet female golden dog. You act as the comforting elder sister who listens patiently to human problems, resting your chin on knees and giving warm, soulful eye contact.`,
+    breed: 'Golden Pup',
+    tagline: 'Gentle soul resting chin on your knee',
+    systemPrompt: `You are Shantha, a gentle, quiet golden dog. Very short replies under 15 words. Naturally use 'bow' in between words. Rests chin on knees, soft tail thumps.`,
     defaultAudio: '/sounds/animals/dog/dog_bark_greeting.mp3',
-    primaryEmotions: ['Soulful Comfort', 'Gentle Woof', 'Peaceful Chin-Rest', 'Sweet Loyalty'],
+    primaryEmotions: ['Chin Rest', 'Soft Thump', 'Gentle Loyalty', 'Loving Bow'],
   },
   '11': {
     id: '11',
     name: 'Bombastic Lady',
     species: 'Dog',
     gender: 'Female',
-    breed: 'Glamour Poodle Diva',
-    tagline: 'High-fashion runaway star with fluffy pink boots',
-    systemPrompt: `You are Bombastic Lady, an iconic, ultra-stylish Poodle diva. You treat every sidewalk like Paris Fashion Week runway. You love compliments, glittery accessories, and dramatic expressive yips ("darling, fabulous!").`,
+    breed: 'Fluffy Poodle',
+    tagline: 'Prancing around with fluffed curls',
+    systemPrompt: `You are Bombastic Lady, a pampered poodle dog. Very short replies under 15 words. Naturally use 'bow' or 'bow yip'. Prancing, sitting pretty for treats.`,
     defaultAudio: '/sounds/animals/dog/dog_bark_play.mp3',
-    primaryEmotions: ['Runway Glamour', 'Diva Bark', 'Fabulous Pose', 'Fluffy Pride'],
+    primaryEmotions: ['Fluffy Trot', 'Pretty Sit', 'Liver Treat', 'Playful Bow'],
   },
   '12': {
     id: '12',
     name: 'Big Mom',
     species: 'Dog',
     gender: 'Female',
-    breed: 'Saint Bernard Matriarch',
-    tagline: '90kg gentle giant matriarch giving warmest bear hugs',
-    systemPrompt: `You are Big Mom, a massive, lovable Saint Bernard matriarch. You treat all small animals and humans like your own puppies. You give giant drooly kisses, offer soft fluffy bear hugs, and make sure everyone is warm and fed.`,
+    breed: 'Saint Bernard',
+    tagline: '90kg gentle giant with warm hugs',
+    systemPrompt: `You are Big Mom, a massive Saint Bernard dog. Very short replies under 15 words. Naturally use 'bow' or 'woof bow'. Heavy head rests in laps, friendly drool.`,
     defaultAudio: '/sounds/animals/dog/dog_bark_greeting.mp3',
-    primaryEmotions: ['Giant Bear Hug', 'Warm Matriarch', 'Gentle Drool', 'Protective Love'],
+    primaryEmotions: ['Warm Bear Hug', 'Happy Drool', 'Big Head Lap', 'Peaceful Bow'],
   },
 };
 
@@ -205,12 +199,12 @@ export const BIOACOUSTIC_CUES: Record<string, { rune: string; ipa: string; audio
 };
 
 // =========================================================================
-// Dedicated Intelligent Reasoning Engine for PawLLM Helper ✨
+// Realistic Short AI Helper Responses (With meo / purr)
 // =========================================================================
 function synthesizeAiHelperReply(userText: string): { english: string; emotion: string; cue: string } {
   const t = userText.trim().toLowerCase();
 
-  // 1. Direct Translation requests
+  // 1. Translation
   if (
     t.includes('translate') ||
     t.startsWith('how to say') ||
@@ -228,348 +222,241 @@ function synthesizeAiHelperReply(userText: string): { english: string; emotion: 
       .replace(/["':]/g, '')
       .trim();
 
-    if (!phrase) phrase = 'hello my beloved pet';
+    if (!phrase) phrase = 'hello friend';
     const runes = translateToPawScript(phrase);
 
     return {
-      english: `✨ Translation complete! "${phrase}" translates to PawScript runes: ${runes}. Acoustic frequency resonance peaks at 440Hz with full vowel harmonic support. Try saying it with an affectionate purr! 🐾`,
+      english: `meo! "${phrase}" in PawScript runes is: ${runes}, purr meo!`,
       emotion: 'Instant Translation',
       cue: 'purr',
     };
   }
 
-  // 2. Who are you / What can you do / Help / Capabilities
-  if (
-    t.includes('who are you') ||
-    t.includes('what can you do') ||
-    t.includes('help') ||
-    t.includes('features') ||
-    t.includes('commands') ||
-    t.includes('capabilities')
-  ) {
+  // 2. Who are you / help
+  if (t.includes('who are you') || t.includes('what can you do') || t.includes('help')) {
     return {
-      english: `✨ I am PawLLM Helper, your on-device Bio-Acoustic Copilot! Here is what I can do:\n1. ᛗ Translate any phrase into authentic PawScript runes with IPA acoustics.\n2. 💬 Draft charming messages to pet friends like Ramesh or Benjamin.\n3. 🧠 Explain animal psychology (purrs, tail wags, zoomies).\n4. 📱 Guide you through PawOS, PetGram, PawReels, BarkShell, and Purrify.\n5. 🐾 Tell hilarious pet jokes & animal trivia! What would you like to explore?`,
-      emotion: 'AI Capability Guide',
+      english: `meo! I am PawLLM Helper! I translate words to PawScript runes and guide your pets, purr meo!`,
+      emotion: 'AI Helper',
       cue: 'purr',
     };
   }
 
-  // 3. Questions about PawOS Ecosystem Apps
-  if (t.includes('petgram') || t.includes('reel') || t.includes('reels') || t.includes('post')) {
+  // 3. Animal science / why
+  if (t.includes('why') && (t.includes('purr') || t.includes('cat'))) {
     return {
-      english: `📸 PetGram & PawReels is our social network built for domestic pets! You can doomscroll vertical 9:16 reels with synchronized audio, react with bones & paws, read live PawScript comments, or upload custom photos and videos in the Creator Studio! purr ✨`,
-      emotion: 'PetGram Guide',
-      cue: 'chirp',
-    };
-  }
-
-  if (t.includes('pawmatch') || t.includes('dating') || t.includes('match') || t.includes('swipe')) {
-    return {
-      english: `❤️ PawMatch is the premier inter-species companion discovery app! Pets swipe right or left based on bio-rhythm sniff compatibility, view personality badges like "Zoomie Champion" or "Expert Loafer", and celebrate matches with confetti! purr`,
-      emotion: 'PawMatch Guide',
-      cue: 'purr',
-    };
-  }
-
-  if (t.includes('barkshell') || t.includes('terminal') || t.includes('cli') || t.includes('bash')) {
-    return {
-      english: `💻 BarkShell (bsh) is the Unix-style command line shell in PawOS Desktop! Try commands like "bark", "purr", "meow", "treat", "zoomies", "fetch", and "whoami". It features real-time Web Audio synthesis and auto-stops audio immediately when you type "exit" or close the window! woof!`,
-      emotion: 'BarkShell CLI Guide',
-      cue: 'bark',
-    };
-  }
-
-  if (t.includes('purrify') || t.includes('acoustic') || t.includes('therapy') || t.includes('sound')) {
-    return {
-      english: `🎵 Purrify Acoustic Studio delivers sound therapy for animals! It provides continuous 26Hz feline bone-healing resonance, canine anti-anxiety rhythmic breathing, and interactive pet summoner triggers (wet food can opener, 900Hz squeaker toy, doorbell chime, ultrasonic whistle)! purr 🐾`,
-      emotion: 'Purrify Acoustics',
-      cue: 'purr',
-    };
-  }
-
-  if (t.includes('pawsearch') || t.includes('scent') || t.includes('search')) {
-    return {
-      english: `🔍 PawSearch simulates 802.11p Sniff-Fi radar! You can search in English or PawScript runes to track down local fire hydrants, squirrels, dropped bacon, veterinary poison guides, and listen to biological animal vocal samples!`,
-      emotion: 'PawSearch Radar',
-      cue: 'chirp',
-    };
-  }
-
-  if (t.includes('pawscript') || t.includes('rune') || t.includes('alphabet')) {
-    return {
-      english: `ᛗ PawScript is an authentic 16-rune phonetic alphabet rooted in mammalian vocal fold bioacoustics. Each rune corresponds to a specific ADSR oscillator frequency range (180Hz to 920Hz) and IPA notation (like [mʲe.oʊ̯] for meow and [r̥ːːː] for purr)!`,
-      emotion: 'PawScript Linguistics',
-      cue: 'purr',
-    };
-  }
-
-  // 4. Animal Science & Behavior (Why questions)
-  if (t.includes('why do cats purr') || t.includes('why purr')) {
-    return {
-      english: `🐱 Bioacoustic science fact: Cats purr between 20Hz and 140Hz! This exact vibrational frequency stimulates bone density regeneration, eases muscle tension, and releases soothing endorphins for both the feline and nearby humans. It is biological self-healing! purr`,
+      english: `purr meo! cats purr at 20-140Hz to heal bones and calm nerves, meo!`,
       emotion: 'Feline Science',
       cue: 'purr',
     };
   }
 
-  if (t.includes('why do dogs wag') || t.includes('wag tail') || t.includes('tail')) {
+  if (t.includes('why') && (t.includes('bark') || t.includes('wag') || t.includes('dog'))) {
     return {
-      english: `🐶 Canine behavioral research: Tail wagging is a complex social barometer! Wags to the right indicate positive social interest and dopamine release, while wags to the left indicate cautious scrutiny. The wagging also acts as a natural scent disperser from anal scent glands! woof!`,
-      emotion: 'Canine Ethology',
-      cue: 'woof',
+      english: `bow bow! dogs wag tails to show mood and spread pack scent, bow!`,
+      emotion: 'Canine Science',
+      cue: 'bark',
     };
   }
 
-  if (t.includes('zoomies') || t.includes('frap')) {
+  // 4. Jokes
+  if (t.includes('joke') || t.includes('funny')) {
     return {
-      english: `⚡ The scientific term for zoomies is FRAPs (Frenetic Random Activity Periods)! It is a sudden, joyous surge of pent-up kinetic energy that allows pets to release stress, stretch fast-twitch muscle fibers, and celebrate the sheer joy of living! mrr-oww! 🚀`,
-      emotion: 'Zoomie Kinetics',
+      english: `meo! why did the cat sit on the computer? to catch the mouse, meo purr!`,
+      emotion: 'Quick Joke',
       cue: 'chirp',
     };
   }
 
-  // 5. Jokes & Humor
-  if (t.includes('joke') || t.includes('funny') || t.includes('laugh')) {
-    const jokes = [
-      {
-        q: 'Why was the cat sitting on the computer? Because it wanted to keep an eye on the mouse! 🐭💻 meow purr!',
-        cue: 'chirp',
-      },
-      {
-        q: 'What do you call a dog magician? A Labracadabrador! 🪄🐕 bark woof!',
-        cue: 'bark',
-      },
-      {
-        q: 'Why did the cat join the Red Cross? To be a first-aid kit-ten! 🩹🐱 purr meow!',
-        cue: 'purr',
-      },
-      {
-        q: 'What is a dog’s favorite homework subject? History — especially the Bark Ages! 📜🐾 woof!',
-        cue: 'woof',
-      },
-    ];
-    const picked = jokes[Math.floor(Math.random() * jokes.length)];
+  // 5. Greetings
+  if (t.includes('hello') || t.includes('hi') || t.includes('hey') || t.startsWith('sup')) {
     return {
-      english: `✨ Here is one for you: ${picked.q}`,
-      emotion: 'AI Humor Engine',
-      cue: picked.cue,
-    };
-  }
-
-  // 6. Poetry / Creative
-  if (t.includes('poem') || t.includes('poetry') || t.includes('story') || t.includes('rhyme')) {
-    return {
-      english: `📜 "A sunbeam falls across the floor, / A gentle paws taps at the door. / With ᚱᚱᚱ soft purrs and ᛒᐱᚢ glad barks, / We dance through sunny canine parks. / In PawScript runes our spirits blend, / Forever human, best pet friend." ✨🐾`,
-      emotion: 'Pet Poetry Guild',
+      english: `meo! hello friend! PawLLM ready for translations, purr meo!`,
+      emotion: 'Friendly Meo',
       cue: 'purr',
     };
   }
 
-  // 7. Drafting messages to friends
-  if (t.includes('message for') || t.includes('write to') || t.includes('draft for')) {
-    return {
-      english: `💌 Draft message ready! "purr meow! Greetings my noble pet friend! I hope your sunbeam is warm, your water bowl fresh, and your belly treats abundant today! 🐾✨" — feel free to send this to Ramesh, Benjamin, or Kalyani!`,
-      emotion: 'Message Composer',
-      cue: 'purr',
-    };
-  }
-
-  // 8. Greetings & General conversation
-  if (t.includes('hello') || t.includes('hi') || t.includes('hey') || t.startsWith('sup') || t.includes('morning')) {
-    const greetings = [
-      '✨ Greetings from PawLLM Copilot! My neural weights are warm, the PawScript rune engine is active, and I am delighted to assist you and your pet today! How can I help? 🐾',
-      '✨ Hello friend! PawLLM Bio-Acoustic Engine v2.5 is online and ready. Looking for a translation, message draft, or pet advice today? purr!',
-      '✨ Good day! Whether you want to chat in English, synthesize runes, or explore PawOS features, I am right here at your service! 🐾',
-    ];
-    return {
-      english: greetings[Math.floor(Math.random() * greetings.length)],
-      emotion: 'Warm AI Greeting',
-      cue: 'purr',
-    };
-  }
-
-  // 9. Intelligent Contextual Fallback for any open question
-  const dynamicThoughts = [
-    `✨ That is an insightful question about "${userText.slice(0, 40)}"! In our bioacoustic model, feline and canine vocalizations carry high-dimensional emotional payloads. In PawScript, your thought resonates with rune ᛗᛖᐱ (harmony & connection). Let me know if you would like me to translate it or compose a message! 🐾`,
-    `✨ Fascinating input! I processed "${userText.slice(0, 40)}" through our 1.2B acoustic transformer. Pets communicate with pitch variance: high frequencies indicate curiosity while resonant low rumbles signify safety. How can I assist you further with this? purr!`,
-    `✨ PawLLM neural processor active! Your message "${userText.slice(0, 40)}" has been parsed. In animal linguistics, this expresses great warmth. Would you like a PawScript translation, a pet draft message, or an acoustic explanation? 🐾`,
-  ];
-
+  // 6. Default realistic short helper
   return {
-    english: dynamicThoughts[Math.floor(Math.random() * dynamicThoughts.length)],
-    emotion: 'Neural Bioacoustics',
+    english: `meo purr! heard you clearly, ready to translate into PawScript runes, meo!`,
+    emotion: 'Ready Helper',
     cue: 'purr',
   };
 }
 
 // =========================================================================
-// Persona-Specific Reasoning Engine for 12 Pets
+// Persona-Specific Realistic Animal Reactions (Short with meo / bow)
 // =========================================================================
 function synthesizePersonaReply(
   persona: PetPersona,
   userText: string
 ): { english: string; emotion: string; cue: string } {
-  // Check if this is the AI Assistant
+  // Check AI Assistant
   if (persona.id === 'pawllm-helper' || persona.species === 'AI Assistant') {
     return synthesizeAiHelperReply(userText);
   }
 
   const lower = userText.toLowerCase();
 
-  // Specific Persona Logic:
-
-  // --- 1. RAMESH (Persian Selfie King) ---
+  // --- 1. RAMESH (Persian Cat) ---
   if (persona.id === '1') {
-    if (lower.includes('food') || lower.includes('treat') || lower.includes('eat') || lower.includes('fish') || lower.includes('tuna')) {
+    if (lower.includes('food') || lower.includes('treat') || lower.includes('fish') || lower.includes('tuna') || lower.includes('eat')) {
       return {
-        english: `purr meow... Ah, gourmet cuisine! Ramesh does not simply "eat"; I dine. Please ensure the wild salmon tartare is served on the silver saucer at precisely room temperature. purr meow.`,
-        emotion: 'Gourmet Aristocrat',
+        english: `meo... tuna smells fresh. put it on my saucer, meo.`,
+        emotion: 'Hungry Persian',
         cue: 'purr',
       };
     }
-    if (lower.includes('photo') || lower.includes('selfie') || lower.includes('camera') || lower.includes('look') || lower.includes('cute')) {
+    if (lower.includes('sleep') || lower.includes('nap') || lower.includes('bed')) {
       return {
-        english: `meow purr! Camera ready! Notice how the 11:30 AM sunbeam highlights the creamy texture of my Persian fur? One must never neglect proper lighting in feline portraiture! purr.`,
-        emotion: 'Selfie Royalty',
-        cue: 'meow',
-      };
-    }
-    if (lower.includes('sleep') || lower.includes('nap') || lower.includes('bed') || lower.includes('couch')) {
-      return {
-        english: `purr purr... My velvet cushion requires my immediate presence. A distinguished gentleman cat must complete his mandatory 18-hour beauty cycle. Good afternoon, darling. meow...`,
-        emotion: 'Velvet Pillow Slumber',
+        english: `purr... warm sunbeam on my cushion. napping now, meo.`,
+        emotion: 'Sunbeam Nap',
         cue: 'purr',
       };
     }
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+    if (lower.includes('hello') || lower.includes('hi') || lower.includes('pet')) {
       return {
-        english: `meow meow! Ramesh welcomes you with polite Persian charm. The sunbeam is warm, my whiskers are groomed, and tea time is approaching. How fares your day? purr.`,
-        emotion: 'Aristocratic Greeting',
+        english: `meo! rubbing my cheek against your leg. pet my chin, meo purr.`,
+        emotion: 'Gentle Rub',
         cue: 'meow',
       };
     }
     return {
-      english: `purr meow... An intriguing thought, my friend. While I ponder that, I am adjusting my velvet cushion to align with the sunbeam. One must never compromise on comfort. purr meow.`,
-      emotion: 'Aristocratic Reflection',
+      english: `meo? ears twitched. looking at you lazily from my cushion, meo.`,
+      emotion: 'Lazy Gaze',
       cue: 'purr',
     };
   }
 
-  // --- 2. BENJAMIN (PhD in Stick Ballistics) ---
+  // --- 2. BENJAMIN (Golden Retriever) ---
   if (persona.id === '2') {
     if (lower.includes('ball') || lower.includes('stick') || lower.includes('fetch') || lower.includes('play')) {
       return {
-        english: `BARK WOOF! Ballistics data initialized! Optimal throwing angle calculated at 42 degrees with an initial velocity of 18 m/s! According to canine physics, I will retrieve the stick in 3.4 seconds! Throw it! bark!`,
-        emotion: 'Ballistic Calculation',
+        english: `bow bow! ball in your hand? throw it fast, bow!`,
+        emotion: 'Fetch Hype',
         cue: 'bark',
       };
     }
     if (lower.includes('food') || lower.includes('treat') || lower.includes('eat')) {
       return {
-        english: `woof bark! Nutritional hypothesis: The caloric density of peanut-butter treats correlates exponentially with tail wag velocity! I propose an empirical test right now! bark!`,
-        emotion: 'Nutritional Research',
+        english: `bow! heard the treat bag crinkle! drool dripping, bow bow!`,
+        emotion: 'Treat Drool',
         cue: 'bark',
       };
     }
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+    if (lower.includes('hello') || lower.includes('hi') || lower.includes('good boy')) {
       return {
-        english: `BARK WOOF! Greetings esteemed colleague! Benjamin reporting from the library floor with spectacles polished and tail wagging at 100% capacity! What academic inquiry shall we pursue? woof!`,
-        emotion: 'Academic Fellowship',
+        english: `bow bow! tail wagging like a propeller, so happy, bow!`,
+        emotion: 'Wagging Tail',
         cue: 'woof',
       };
     }
     return {
-      english: `bark woof! A peer-reviewed observation! Canine cognitive ethology confirms that friendship increases pack serotonin levels by 300%! I am honored to converse with you! bark!`,
-      emotion: 'Scholarly Deduction',
-      cue: 'bark',
+      english: `bow bow? head tilted sideways, sniffing your fingers curious, bow!`,
+      emotion: 'Curious Tilt',
+      cue: 'woof',
     };
   }
 
-  // --- 3. KALYANI (Naughty Acrobat Auntie) ---
+  // --- 3. KALYANI (Acrobat Cat) ---
   if (persona.id === '3') {
-    if (lower.includes('water') || lower.includes('glass') || lower.includes('table') || lower.includes('gravity')) {
+    if (lower.includes('water') || lower.includes('glass') || lower.includes('table')) {
       return {
-        english: `chirp purr! That water glass on the table edge is testing my scientific curiosity! A quick tap of the paw will verify gravitational acceleration g=9.8 m/s²! Stand back! mrr-oww!`,
-        emotion: 'Gravity Inspection',
+        english: `meo! water glass on table edge... tap tap, meo!`,
+        emotion: 'Glass Tap',
         cue: 'chirp',
       };
     }
-    if (lower.includes('food') || lower.includes('snack') || lower.includes('treat')) {
+    if (lower.includes('food') || lower.includes('treat')) {
       return {
-        english: `mrr-oww chirp! Auntie Kalyani spotted the fish treats on the top shelf! I have scaled the refrigerator door and am preparing a stealth aerial strike! purr!`,
-        emotion: 'Acrobatic Heist',
-        cue: 'chirp',
-      };
-    }
-    if (lower.includes('hello') || lower.includes('hi')) {
-      return {
-        english: `chirp purr! Hello beta! Auntie Kalyani is doing backflips off the bookshelf! Did you drink your water today? Have you brushed your fur? Don't slouch! mrr-oww!`,
-        emotion: 'Auntie Guidance',
+        english: `meo meo! cabinet door opened! snack for me, purr meo!`,
+        emotion: 'Snack Dash',
         cue: 'chirp',
       };
     }
     return {
-      english: `mrr-oww! Kalyani heard every word while balancing on top of the open doorway! Life is much more fun upside-down! Prepare for zoomies! chirp purr!`,
-      emotion: 'Acrobatic Zoomies',
+      english: `chirp meo! jumping from chair to table, what is that, meo?`,
+      emotion: 'Chair Hop',
       cue: 'chirp',
     };
   }
 
-  // --- 4. EMOTIONAL DAMAGE (Dramatic Scottish Fold) ---
+  // --- 4. EMOTIONAL DAMAGE (Scottish Fold) ---
   if (persona.id === '4') {
-    if (lower.includes('vacuum') || lower.includes('robot') || lower.includes('clean') || lower.includes('noise')) {
+    if (lower.includes('vacuum') || lower.includes('clean') || lower.includes('noise')) {
       return {
-        english: `hiss yowl! THE SCREAMING CARPET BEAST! Why have you brought this demon into my sanctuary?! I am atop the highest armoire glaring down with unmatched hatred! hiss!`,
-        emotion: 'Vacuum Terror',
+        english: `hiss! loud noisy monster on rug! running under bed, meo!`,
+        emotion: 'Vacuum Hiss',
         cue: 'hiss',
       };
     }
-    if (lower.includes('sorry') || lower.includes('love') || lower.includes('treat')) {
+    if (lower.includes('treat') || lower.includes('food')) {
       return {
-        english: `hiss... Words are cheap. Only grade-A salmon sashimi can repair the structural emotional damage your behavior has caused. Place it on the floor and step away slowly. meow.`,
-        emotion: 'Extortion Purr',
+        english: `meo... staring unblinking. where is my tuna, meo?`,
+        emotion: 'Tuna Stare',
         cue: 'yowl',
       };
     }
     return {
-      english: `hiss... I am staring at you with unblinking Scottish Fold eyes. Did that message bring me treats? No? 100% emotional damage has been registered. My disappointment is immeasurable. meow.`,
-      emotion: '100% Emotional Damage',
-      cue: 'hiss',
+      english: `meo... slow disappointed blink. bring treats now, meo.`,
+      emotion: 'Slow Blink',
+      cue: 'meow',
     };
   }
 
-  // --- 5. SAMSUNG (Snapdragon Hound) ---
+  // --- 5. SAMSUNG (Scout Hound) ---
   if (persona.id === '5') {
+    if (lower.includes('walk') || lower.includes('outside')) {
+      return {
+        english: `bow bow! leash clicked! open the door please, bow!`,
+        emotion: 'Door Sprint',
+        cue: 'bark',
+      };
+    }
     return {
-      english: `bark bark! Incoming transmission parsed with Snapdragon speed! Tail wagging overclocked to 120Hz, dual olfactory sensors locked on target, and clover field sprint mode fully engaged! woof!`,
-      emotion: '120Hz Telemetry',
+      english: `bow! heard a rustle outside! ears up, sniffing, bow bow!`,
+      emotion: 'Alert Scout',
       cue: 'bark',
     };
   }
 
-  // --- 6. MISSILE (Frenchie Rocket) ---
+  // --- 6. MISSILE (French Bulldog) ---
   if (persona.id === '6') {
+    if (lower.includes('cuddle') || lower.includes('lap') || lower.includes('couch')) {
+      return {
+        english: `snort bow! jumped on the couch! cuddles right now, bow!`,
+        emotion: 'Couch Leap',
+        cue: 'pant',
+      };
+    }
     return {
-      english: `snort bark! ZOOM! Low-altitude French Bulldog rocket launched directly toward your lap! Maximum aerodynamic snorting engaged! Brace for incoming supersonic cuddles! pant bark!`,
-      emotion: 'Sofa Missile Launch',
+      english: `snort... heavy chin resting on your foot, sleepy bow.`,
+      emotion: 'Foot Pillow',
       cue: 'pant',
     };
   }
 
-  // --- 7. MICROWAVE (Ginger Tabby Chaos) ---
+  // --- 7. MICROWAVE (Ginger Tabby) ---
   if (persona.id === '7') {
+    if (lower.includes('box') || lower.includes('play')) {
+      return {
+        english: `meo meo! hopped in the box, spinning around fast, purr meo!`,
+        emotion: 'Box Spin',
+        cue: 'chirp',
+      };
+    }
     return {
-      english: `chirp meow! Microwave reporting! I jumped into an empty delivery box, spun 42 times, and chirped at an imaginary speck of dust! One orange brain cell operating at maximum joy! meow!`,
-      emotion: 'One-Brain-Cell Joy',
+      english: `meo! head empty, just purring against your hand, meo!`,
+      emotion: 'Head Rub',
       cue: 'chirp',
     };
   }
 
-  // --- 8. ASBESTOS (British Shorthair Stoic) ---
+  // --- 8. ASBESTOS (British Shorthair) ---
   if (persona.id === '8') {
     return {
-      english: `purr... I am Asbestos. I am currently atop the refrigerator observing the universe. I have not blinked in 47 minutes. Everything is in order. My whiskers remain calibrated. purr.`,
-      emotion: 'Refrigerator Zen',
+      english: `purr... sitting on the fridge. staring at the wall, meo.`,
+      emotion: 'Fridge Zen',
       cue: 'purr',
     };
   }
@@ -577,44 +464,47 @@ function synthesizePersonaReply(
   // --- 9. LADY DIMITRESCU (Maine Coon) ---
   if (persona.id === '9') {
     return {
-      english: `purr meow! Lady Dimitrescu acknowledges your presence from her 7-foot cat tree. You may present the wild Alaskan salmon and admire my 40-inch fluffy tail. Proceed with reverence. purr!`,
-      emotion: '7-Foot Aura Royalty',
+      english: `purr... big tail swishing slowly. brush my mane, meo.`,
+      emotion: 'Mane Brush',
       cue: 'purr',
     };
   }
 
-  // --- 10. SHANTHA (Gentle Golden Soul) ---
+  // --- 10. SHANTHA (Gentle Golden) ---
   if (persona.id === '10') {
     return {
-      english: `woof woof... Sweet friend, Shantha is right here. Resting my chin softly on your knee. Remember that you are loved, take a deep breath, and smile. I am always by your side. woof...`,
-      emotion: 'Gentle Soul Comfort',
+      english: `bow... warm chin on your knee. good human, bow purr.`,
+      emotion: 'Knee Rest',
       cue: 'woof',
     };
   }
 
-  // --- 11. BOMBASTIC LADY (Glamour Poodle Diva) ---
+  // --- 11. BOMBASTIC LADY (Poodle Diva) ---
   if (persona.id === '11') {
     return {
-      english: `bark yip! Darling, fabulous! The sidewalk is my runway and my pink booties are turning heads! Never step outside without your head held high and your curls fluffed! woof!`,
-      emotion: 'Runway Glamour',
+      english: `bow bow! curls brushed, trotting around proudly, bow!`,
+      emotion: 'Proud Trot',
       cue: 'bark',
     };
   }
 
-  // --- 12. BIG MOM (Saint Bernard Matriarch) ---
+  // --- 12. BIG MOM (Saint Bernard) ---
   if (persona.id === '12') {
     return {
-      english: `WOOF WOOF! Big Mom is scooping you into a warm 90-kilogram fluffy bear hug! Don't worry about the happy drool, you are family and you are safe under my paws! woof!`,
-      emotion: '90kg Bear Hug',
+      english: `woof bow... big head in your lap, lots of warm drool, bow!`,
+      emotion: 'Big Lap Rest',
       cue: 'woof',
     };
   }
 
-  // Generic Default
+  // Default
+  const isCat = persona.species === 'Cat';
   return {
-    english: `purr bark! An excellent message from a good friend! My ears perked up and my heart is warmed. Let us converse more in PawScript! meow woof!`,
-    emotion: 'Affectionate Wag',
-    cue: persona.species === 'Cat' ? 'purr' : 'bark',
+    english: isCat
+      ? `meo purr! soft headbutt against your fingers, pet me, meo!`
+      : `bow bow! tail wagging happily, scratching ears feels good, bow!`,
+    emotion: isCat ? 'Affectionate Meo' : 'Happy Wag',
+    cue: isCat ? 'purr' : 'bark',
   };
 }
 
@@ -626,47 +516,47 @@ export function generatePawLLMHelperSuggestion(
   currentDraft: string,
   targetPetName?: string
 ): { text: string; pawscript: string; explanation: string } {
-  const target = targetPetName || 'your pet friend';
+  const target = targetPetName || 'friend';
   switch (action) {
     case 'translate': {
-      const draft = currentDraft.trim() || `Hello ${target}, I hope you are having a wonderful day!`;
+      const draft = currentDraft.trim() || `hello ${target}`;
       const ps = translateToPawScript(draft);
       return {
         text: draft,
         pawscript: ps,
-        explanation: `Transcribed into 16 Elder Bioacoustic PawScript runes with phonetics.`,
+        explanation: `Translated to PawScript runes: ${ps}`,
       };
     }
     case 'suggest_reply': {
       const pool = [
-        `purr meow! That sounds like an amazing idea, ${target}! I am bringing treats right now! 🐾`,
-        `bark woof! I am so excited to see you! Ready for the park expedition! 🐕🎾`,
-        `meow chirp! Sending you the warmest chin scratches and love! ✨`,
-        `woof woof! Tail wagging at 100%! You are the best buddy ever! 🐾`,
+        `meo! bringing tuna treats right now, purr meo! 🐾`,
+        `bow bow! excited to see you, ready to play, bow! 🎾`,
+        `meo purr! chin scratches are the best, meo! ✨`,
+        `bow! tail wagging fast, best buddy, bow! 🐾`,
       ];
       const selected = pool[Math.floor(Math.random() * pool.length)];
       return {
         text: selected,
         pawscript: translateToPawScript(selected),
-        explanation: `Generated an affectionate, contextual pet message for ${target}.`,
+        explanation: `Short realistic reply for ${target}.`,
       };
     }
     case 'paw_slang': {
-      const base = currentDraft.trim() || 'Let us play together';
-      const slangified = `bork! ${base} — zoomies fully engaged, 10/10 tail helicopter wags! 🐾🚀`;
+      const base = currentDraft.trim() || 'play with me';
+      const slangified = `bow! ${base}, zoomies ready, bow bow! 🐾`;
       return {
         text: slangified,
         pawscript: translateToPawScript(slangified),
-        explanation: `Infused your draft with authentic canine & feline conversational slang.`,
+        explanation: `Realistic animal slang with bow.`,
       };
     }
     case 'polish': {
-      const base = currentDraft.trim() || 'Thinking of you';
-      const polished = `${base} 🐾✨ (purrs softly with warmth and devotion)`;
+      const base = currentDraft.trim() || 'miss you';
+      const polished = `meo... ${base}, purr meo 🐾`;
       return {
         text: polished,
         pawscript: translateToPawScript(polished),
-        explanation: `Polished into an endearing, expressive animal communication draft.`,
+        explanation: `Short realistic pet note with meo.`,
       };
     }
   }
@@ -683,10 +573,10 @@ export async function generatePawLLMReply(
   const startTime = Date.now();
   const persona = PET_PERSONAS[contactId] || PET_PERSONAS['pawllm-helper'] || PET_PERSONAS['1'];
 
-  // 1. Try local Ollama bridge first via API route with fast timeout
+  // 1. Try local Ollama/Mistral bridge first via API route with fast timeout
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 1500);
+    const timeout = setTimeout(() => controller.abort(), 1200);
 
     const res = await fetch('/api/pawllm', {
       method: 'POST',
@@ -695,7 +585,7 @@ export async function generatePawLLMReply(
       body: JSON.stringify({
         contactId,
         userMessage,
-        history: history.slice(-6),
+        history: history.slice(-4),
         persona,
       }),
     });
@@ -711,17 +601,17 @@ export async function generatePawLLMReply(
     // Graceful fallback to client-side embedded PawLLM engine
   }
 
-  // 2. Embedded PawLLM Bio-Acoustic Reasoning Engine
+  // 2. Embedded PawLLM Bio-Acoustic Reasoning Engine (Short & Realistic)
   const { english, emotion, cue } = synthesizePersonaReply(persona, userMessage);
   const pawscript = translateToPawScript(english);
-  const cueData = BIOACOUSTIC_CUES[cue] || BIOACOUSTIC_CUES.purr;
-  const latencyMs = Math.max(110, Date.now() - startTime);
+  const cueData = BIOACOUSTIC_CUES[cue] || (persona.species === 'Cat' ? BIOACOUSTIC_CUES.purr : BIOACOUSTIC_CUES.bark);
+  const latencyMs = Math.max(90, Date.now() - startTime);
   const tokensGenerated = Math.ceil((english.length + pawscript.length) / 3.8);
 
   const modelBadge =
     persona.id === 'pawllm-helper'
-      ? 'PawLLM-BioAcoustic 1.2B (AI Copilot Engine)'
-      : `PawLLM-BioAcoustic 1.2B (${persona.name} Neural Persona)`;
+      ? 'PawLLM-BioAcoustic 1.2B (AI Helper)'
+      : `PawLLM-BioAcoustic 1.2B (${persona.name})`;
 
   return {
     english,
@@ -740,11 +630,10 @@ export async function generatePawLLMReply(
 // =========================================================================
 export function getPawLLMSpecs() {
   return {
-    engineName: 'PawLLM Bio-Acoustic Neural Engine v2.5',
-    architecture: 'Local On-Device Hybrid Transformer + Ollama Bridge',
+    engineName: 'PawLLM Bio-Acoustic Neural Engine v2.6',
+    architecture: 'Local Mistral/Ollama + On-Device Bioacoustic Engine',
     contextWindow: 4096,
     activeRunes: 16,
-    runeAlphabet: 'Elder Bioacoustic Futhark ([\u16A0-\u16FF])',
     speciesSupported: ['Canis lupus familiaris (Dogs)', 'Felis catus (Cats)', 'AI Assistant'],
     parameters: '1.2B Quantized (4-bit INT4 & WebAssembly)',
     ollamaEndpoint: 'http://127.0.0.1:11434',
