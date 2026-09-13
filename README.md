@@ -26,7 +26,7 @@ We built **PawPad Pro running PawOS 18.4 (Animal Edition)** — an absurdly comp
 7. **PawSearch Scent Engine (`/pawsearch`):** An olfactory search bar simulating 802.11p Sniff-Fi radar, tracking down local fire hydrants, squirrels, dropped bacon, and catnip reserves.
 8. **PawScript Phonetic Synthesizer (`/pawscript`):** A complete 16-rune phonetic alphabet paired with Web Audio ADSR oscillators (180Hz to 920Hz), synthesizing animal acoustics (purrs, trills, hisses, barks) into cryptographic runes with IPA phonetic notation.
 9. **Animal Wallpaper Gallery & Custom Pet Photos:** Switch between 10 curated animal themes (Benjamin Scholar, Husky in Snow, Playful Shiba, Bengal Leopard, Cozy Bunny, Cyber Fox) or upload custom pet wallpapers via file picker or image URL.
-10. **Hardware & Sensory Utilities:** Dual silicone capacitive cat ears with tickle-haptics, Cat FaceID retina scanner, a 120Hz laser pointer training arcade, and ambient animal acoustic background music.
+10. **Simulated Tablet Experience & Utilities:** Simulated iPad frame and bezel UI with playful cat ear bumpers, simulated biometric pet FaceID unlock, interactive laser dot training arcade, and ambient animal acoustic background audio.
 
 ## Technical Details
 ### Technologies/Components Used
@@ -37,18 +37,11 @@ For Software:
 - **Tools used:** Web Audio API (custom ADSR oscillator synthesizers for animal frequencies & active audio tracking), LocalStorage State Persistence Engine, Node.js, npm, ESLint
 
 For Hardware:
-- **List main components:**
-  - iPad Pro M4 Bionic Animal Edition Chassis
-  - Dual Silicone Capacitive Cat Ears (tickle-responsive)
-  - Biometric Cat FaceID & Snout Retinal Sensor
-  - Sniff-Fi 802.11p (Paw) Olfactory Antenna
-- **List specifications:**
-  - Display: 120Hz Liquid Retina XDR with anti-drool claw-resistant oleophobic coating
-  - Audio Engine: ADSR WebAudio oscillator bank synthesizing 16 animal acoustic phonemes (180 Hz to 920 Hz)
-  - Response Time: 0.001 ms pounce-to-click latency
-- **List tools required:**
-  - Any modern web browser (Chrome, Firefox, Safari, Edge)
-  - Mouse, Trackpad, or Touchscreen (paw-friendly digitizer)
+*(N/A — PawLingo is a 100% software-based web application. No custom physical hardware is required.)*
+- **Target Devices:** Any modern laptop, desktop, iPad, Android tablet, or smartphone
+- **Audio Output:** Standard speakers or headphones (for Web Audio API animal acoustic frequency synthesis)
+- **Input:** Touchscreen, mouse, or trackpad (paw-friendly UI targets)
+- **Display:** Any modern web browser display (Chrome, Safari, Firefox, Edge)
 
 ### Implementation
 For Software:
@@ -128,37 +121,10 @@ graph TD
 For Hardware:
 
 # Schematic & Circuit
-```
-+-------------------------------------------------------------------------+
-|                  PAWPAD PRO M4 - HARDWARE ARCHITECTURE                  |
-+-------------------------------------------------------------------------+
-|  [Left Silicone Ear]                           [Right Silicone Ear]     |
-|   (Capacitive Tickle)                           (Capacitive Tickle)     |
-|          |                                              |               |
-|          +--------------> [Touch Controller] <----------+               |
-|                                  |                                      |
-|  [FaceID Snout Cam] ---> [Apple M4 Bionic] <--- [Sniff-Fi 802.11p Ant]  |
-|                                  |                                      |
-|      +---------------------------+---------------------------+          |
-|      |                           |                           |          |
-| [120Hz Claw Screen]    [ADSR Audio Synthesizer]     [Laser Diode Array] |
-| (Anti-Drool Glass)     (180Hz - 920Hz Output)       (0.001ms Pounce)    |
-+-------------------------------------------------------------------------+
-```
-*Circuit Architecture: Simulated physical block diagram of the PawPad Pro hardware chassis.*
-
-![Schematic](screenshots/01_pawpad_home.webp)
-*Simulated Hardware Schematic: Demonstrates the iPad chassis, stereo animal sound transducers, and claw-responsive touch digitizer.*
+*(N/A — Pure software application; no physical circuits or hardware components required.)*
 
 # Build Photos
-![Components](screenshots/01_pawpad_home.webp)
-*Core Components: 120Hz Retina Display, silicone cat ear haptic bumpers, front-facing biometric snout scanner, and home touch bar.*
-
-![Build](screenshots/04_pawreels_video.jpeg)
-*Build Integration: Video decoding pipelines, canvas particle emitters, and Web Audio frequency synthesis testing during development.*
-
-![Final](screenshots/01_pawpad_home.webp)
-*Final Product: Complete, fully functional PawPad Pro running PawOS 18.4 Animal Edition with multi-app multitasking.*
+*(N/A — Pure software application; runs directly in any modern web browser.)*
 
 ### Project Demo
 # Video
@@ -184,7 +150,7 @@ For Hardware:
 - PawSearch Scent Engine: `http://localhost:3000/pawsearch`
 
 ## Team Contributions
-- **Harinarayanan**: Project ideation & conceptualization, hardware simulation architecture, UI/UX aesthetics, acoustic sound curation, inter-species responsiveness testing, and technical documentation.
+- **Harinarayanan**: Project ideation & conceptualization, UI/UX design, acoustic sound curation, inter-species interaction testing, and technical documentation.
 - **Amal Anil**: Full-Stack Architecture, PawOS Desktop Window Manager, BarkShell CLI Terminal, Purrify Sound Therapy Studio, PetGram & PawReels video engine, PawLLM dual-dialect translation pipeline, PawScript Web Audio ADSR synthesizer, hydration shield, and Animal Wallpaper system.
 
 ---
