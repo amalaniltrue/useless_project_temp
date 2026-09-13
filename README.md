@@ -126,14 +126,19 @@ For Hardware:
 ### Project Demo
 # Video
 
+[![PawLingo Full Project Walkthrough Video](https://img.shields.io/badge/▶%EF%B8%8F_Watch_Full_Screen_Recorded_Project_Demo-Google_Drive-blue?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1Xo0QI-QP_UBfnEWIE6eAcVW4mhYtkIVc/view?usp=sharing)
+
+🔗 **Full Project Screen Recording Video:** [https://drive.google.com/file/d/1Xo0QI-QP_UBfnEWIE6eAcVW4mhYtkIVc/view?usp=sharing](https://drive.google.com/file/d/1Xo0QI-QP_UBfnEWIE6eAcVW4mhYtkIVc/view?usp=sharing)
+
 | Video Demo | Feature Focus | Walkthrough Highlights |
 | :--- | :--- | :--- |
+| [🎥 **Full Screen Recording Demo**](https://drive.google.com/file/d/1Xo0QI-QP_UBfnEWIE6eAcVW4mhYtkIVc/view?usp=sharing) | **Complete PawLingo Ecosystem Walkthrough** | Full high-definition end-to-end screen recording demonstrating PawPad Pro, PawOS Desktop, BarkShell, Purrify, PetGram, PawReels, PawChat, PawMatch, PawSearch, and PawScript bioacoustics. |
 | [▶️ **Watch Demo 1: PawScript Bioacoustics**](videos/01_pawscript_bioacoustics_demo.webm) | **PawScript Bioacoustics V2 & Phonetics Engine** | Full walkthrough of the 16-rune animal alphabet, real-time bioacoustic synthesis, live natural speech to PawScript translator, typing pad, and audio oscillator playback. |
 | [▶️ **Watch Demo 2: PawSearch Scent Engine**](videos/02_pawsearch_scent_engine_demo.webm) | **PawSearch Olfactory Scent Engine & Navigation** | Demonstrates searching in runic PawScript glyphs, query translation to English web results, phonetic transcriptions, and biological animal sound sample playback. |
 | [▶️ **Watch Demo 3: PetGram & PawReels**](videos/03_petgram_pawreels_demo.webm) | **PetGram & PawReels Short-Form Video Feed** | Demonstrates vertical 9:16 video reels doomscrolling, synchronized audio tracks, live PawScript comment streams, bone & paw reactions, and app navigation. |
 
 > [!NOTE]
-> All screencast recordings are captured in full high-definition (1859x896) on the live PawPad Pro / PawOS environment and stored in the [`videos/`](videos/) directory.
+> The full project screen recording is hosted on [Google Drive](https://drive.google.com/file/d/1Xo0QI-QP_UBfnEWIE6eAcVW4mhYtkIVc/view?usp=sharing). Additional individual screencasts are stored in the [`videos/`](videos/) directory.
 
 # Additional Demos
 - Live Local Web Server: `http://localhost:3000`
