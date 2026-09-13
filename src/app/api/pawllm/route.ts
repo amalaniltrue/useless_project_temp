@@ -1,28 +1,46 @@
 import { NextResponse } from 'next/server';
 import { translateToPawScript } from '@/lib/pawscript';
-import { PET_PERSONAS } from '@/lib/pawllm';
+import { PET_PERSONAS, generatePawLLMReply } from '@/lib/pawllm';
 
 // =========================================================================
-// Local Ollama Bridge & Embedded PawLLM API Route
+// Local Ollama Bridge & Embedded PawLLM API Route v2.5
 // =========================================================================
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 
-// Check if local Ollama daemon is running
+let cachedOllamaStatus: { online: boolean; models: string[]; checkedAt: number } = {
+  online: false,
+  models: [],
+  checkedAt: 0,
+};
+
+// Fast non-blocking check with 30-second memory cache
 async function checkOllama(): Promise<{ online: boolean; models: string[] }> {
+  const now = Date.now();
+  if (now - cachedOllamaStatus.checkedAt < 30000 && cachedOllamaStatus.checkedAt > 0) {
+    return { online: cachedOllamaStatus.online, models: cachedOllamaStatus.models };
+  }
+
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 1200);
+    const timeout = setTimeout(() => controller.abort(), 350);
     const res = await fetch(`${OLLAMA_HOST}/api/tags`, {
       signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
     });
     clearTimeout(timeout);
-    if (!res.ok) return { online: false, models: [] };
+
+    if (!res.ok) {
+      cachedOllamaStatus = { online: false, models: [], checkedAt: now };
+      return { online: false, models: [] };
+    }
+
     const data = await res.json();
     const models = (data.models || []).map((m: { name: string }) => m.name);
+    cachedOllamaStatus = { online: true, models, checkedAt: now };
     return { online: true, models };
   } catch {
+    cachedOllamaStatus = { online: false, models: [], checkedAt: now };
     return { online: false, models: [] };
   }
 }
@@ -31,7 +49,7 @@ export async function GET() {
   const ollama = await checkOllama();
   return NextResponse.json({
     status: 'online',
-    engine: 'PawLLM Bio-Acoustic Neural Engine v2.4',
+    engine: 'PawLLM Bio-Acoustic Neural Engine v2.5',
     embeddedActive: true,
     ollamaBridge: {
       host: OLLAMA_HOST,
@@ -43,7 +61,7 @@ export async function GET() {
       architecture: 'Local On-Device Hybrid Transformer + Local Ollama Daemon Bridge',
       contextWindow: 4096,
       quantization: '4-bit INT4 WebAssembly / Local GPU',
-      pawscriptAlphabetSize: 23,
+      pawscriptAlphabetSize: 16,
       zeroCloudTelemetry: true,
     },
   });
@@ -54,14 +72,15 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { contactId, userMessage, history = [] } = body;
-    const persona = PET_PERSONAS[contactId] || PET_PERSONAS['1'];
+    const persona = PET_PERSONAS[contactId] || PET_PERSONAS['pawllm-helper'] || PET_PERSONAS['1'];
 
-    // Check if local Ollama daemon is available
+    // 1. Check if local Ollama daemon is available and running
     const ollama = await checkOllama();
     if (ollama.online && ollama.models.length > 0) {
       const selectedModel =
-        ollama.models.find((m) => m.includes('llama3.2') || m.includes('qwen') || m.includes('mistral') || m.includes('tinyllama')) ||
-        ollama.models[0];
+        ollama.models.find((m) =>
+          m.includes('llama3.2') || m.includes('qwen') || m.includes('mistral') || m.includes('tinyllama')
+        ) || ollama.models[0];
 
       const systemPrompt = `
 ${persona.systemPrompt}
@@ -70,7 +89,7 @@ You know the ancient phonetic language of animals called "PawScript", which uses
 Always stay completely in character.
 You MUST output your reply in valid JSON format:
 {
-  "english": "Your conversational reply in English with natural animal vocal sounds included (purr, meow, bark, woof, etc.). Keep it fun, punchy, and affectionate (1-3 sentences).",
+  "english": "Your conversational reply in English with natural animal vocal sounds included. Keep it fun, punchy, and affectionate (1-3 sentences).",
   "emotion": "Dominant emotion e.g. Joyful, Aristocratic, Zoomies, Mischief"
 }
 Do not output markdown codeblocks, just raw JSON.
@@ -87,7 +106,7 @@ Do not output markdown codeblocks, just raw JSON.
 
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 4000);
+        const timeout = setTimeout(() => controller.abort(), 3500);
         const ollamaRes = await fetch(`${OLLAMA_HOST}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -120,7 +139,7 @@ Do not output markdown codeblocks, just raw JSON.
             const english = parsed.english;
             const pawscript = translateToPawScript(english);
             const isCat = persona.species === 'Cat';
-            const audioCue = isCat ? '/sounds/animals/cat/cat_purr.mp3' : '/sounds/animals/dog/dog_play_bark.mp3';
+            const audioCue = isCat ? '/sounds/animals/cat/cat_purr.mp3' : '/sounds/animals/dog/dog_bark_play.mp3';
 
             return NextResponse.json({
               english,
@@ -135,13 +154,14 @@ Do not output markdown codeblocks, just raw JSON.
           }
         }
       } catch {
-        // Fall back to embedded engine if Ollama call failed or timed out
+        // Fall through to embedded engine
       }
     }
 
-    // Return signal to use client-side embedded PawLLM engine
-    return NextResponse.json({ fallbackToEmbedded: true });
+    // 2. High-performance Embedded PawLLM Server Synthesis
+    const reply = await generatePawLLMReply(contactId, userMessage, history);
+    return NextResponse.json(reply);
   } catch (err) {
-    return NextResponse.json({ error: String(err), fallbackToEmbedded: true }, { status: 500 });
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

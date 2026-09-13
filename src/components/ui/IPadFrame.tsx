@@ -224,10 +224,10 @@ export function IPadFrame({
       {/* THE IPAD CHASSIS */}
       {/* ========================================================================= */}
       <div
-        className={`relative transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-2xl ${
+        className={`relative transition-all duration-300 flex flex-col justify-between shadow-2xl ${
           isFullScreen
-            ? 'w-screen h-screen rounded-none border-0'
-            : 'w-full max-w-[1150px] h-[95vh] max-h-[850px] rounded-[48px] border-[14px] border-neutral-800 bg-neutral-900 shadow-[0_25px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10'
+            ? 'w-screen h-screen rounded-none p-0 border-0'
+            : 'w-full max-w-[1150px] h-[95vh] max-h-[850px] rounded-[44px] sm:rounded-[48px] p-3 sm:p-3.5 border-[7px] sm:border-[8px] border-neutral-800 bg-neutral-900 shadow-[0_25px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10'
         }`}
       >
         {/* Cat Case Silhouette Ears (On Top Bezel) */}
@@ -277,6 +277,8 @@ export function IPadFrame({
         {/* iPad Inner Screen Content Box - Solid Black or White by mode */}
         <div
           className={`relative flex-1 flex flex-col justify-between overflow-hidden transition-colors duration-300 ${
+            !isFullScreen ? 'rounded-[32px] sm:rounded-[36px]' : 'rounded-none'
+          } ${
             mode === 'dark' ? 'bg-[#09090b] text-white' : 'bg-[#f8f9fa] text-neutral-900'
           }`}
         >

@@ -645,6 +645,8 @@ export default function IPadHomePage() {
         {/* iPad Display Area */}
         <div
           className={`relative flex-1 flex flex-col justify-between overflow-hidden ${
+            !isFullScreen ? 'rounded-[32px] sm:rounded-[36px]' : 'rounded-none'
+          } ${
             isDarkStatus ? 'text-neutral-900' : 'text-white'
           } ${
             WALLPAPERS[wallpaper]?.bgClass || 'bg-cover bg-center bg-no-repeat'
