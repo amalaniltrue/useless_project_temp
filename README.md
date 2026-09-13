@@ -71,17 +71,14 @@ npm run dev
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](screenshots/01_pawpad_home.webp)
-*PawPad Pro Lock Screen & Homescreen: Featuring Sniff-Fi telemetry, silicone cat ears, live ambient audio player, and custom animal wallpaper gallery.*
-
-![Screenshot2](screenshots/04_pawreels_video.jpeg)
-*PetGram & PawReels: Vertical 9:16 high-velocity pet video reels with synchronized audio, real-time progress bar, comments translated to PawScript, and reel navigation.*
-
-![Screenshot3](screenshots/03_pawmatch_dating.webp)
-*PawMatch Dating Suite: Card-swiping interface with sniff compatibility algorithms, detailed animal bios, personality tags, and celebratory match animations.*
-
-![Screenshot4](screenshots/02_petgram_feed.webp)
-*PetGram Photo & Reel Studio: Unified creator studio to upload custom videos and photos with live preview, audio soundtrack selection, and live PawScript translation.*
+![Screenshot 1](screenshots/screenshot1.png)
+![Screenshot 2](screenshots/screenshot2.png)
+![Screenshot 3](screenshots/screenshot3.png)
+![Screenshot 4](screenshots/screenshot4.png)
+![Screenshot 5](screenshots/screenshot5.png)
+![Screenshot 6](screenshots/screenshot6.png)
+![Screenshot 7](screenshots/screenshot7.png)
+![Screenshot 8](screenshots/screenshot8.png)
 
 # Diagrams
 ```mermaid
