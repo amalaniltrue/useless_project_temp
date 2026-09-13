@@ -113,7 +113,7 @@ export interface AudioParams {
   tremoloDepth?: number;
   filterFrequency?: number;
   filterType?: BiquadFilterType;
-  realAudioFile?: string; // Path to real audio file, e.g. "/audio/animals/cat_meow.mp3"
+  realAudioFile?: string; // Path to real audio file, e.g. "/sounds/animals/cat/cat_meow_standard.mp3"
 }
 
 export type StressLevel = 'whisper' | 'soft' | 'neutral' | 'emphasized' | 'loud';

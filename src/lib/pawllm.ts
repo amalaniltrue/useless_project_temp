@@ -201,8 +201,9 @@ export const BIOACOUSTIC_CUES: Record<string, { rune: string; ipa: string; audio
 // =========================================================================
 // Realistic Short AI Helper Responses (With meo / purr)
 // =========================================================================
-function synthesizeAiHelperReply(userText: string): { english: string; emotion: string; cue: string } {
-  const t = userText.trim().toLowerCase();
+function synthesizeAiHelperReply(userText: string = ''): { english: string; emotion: string; cue: string } {
+  const safe = userText || '';
+  const t = safe.trim().toLowerCase();
 
   // 1. Translation
   if (
@@ -213,7 +214,7 @@ function synthesizeAiHelperReply(userText: string): { english: string; emotion: 
     t.includes('in pawscript') ||
     t.includes('in runes')
   ) {
-    let phrase = userText
+    let phrase = safe
       .replace(/translate/i, '')
       .replace(/how (do you|to) say/i, '')
       .replace(/in pawscript/i, '')
@@ -287,16 +288,17 @@ function synthesizeAiHelperReply(userText: string): { english: string; emotion: 
 // =========================================================================
 // Persona-Specific Realistic Animal Reactions (Short with meo / bow)
 // =========================================================================
-function synthesizePersonaReply(
+export function synthesizePersonaReply(
   persona: PetPersona,
-  userText: string
+  userText: string = ''
 ): { english: string; emotion: string; cue: string } {
+  const safeText = userText || '';
   // Check AI Assistant
   if (persona.id === 'pawllm-helper' || persona.species === 'AI Assistant') {
-    return synthesizeAiHelperReply(userText);
+    return synthesizeAiHelperReply(safeText);
   }
 
-  const lower = userText.toLowerCase();
+  const lower = safeText.toLowerCase();
 
   // --- 1. RAMESH (Persian Cat) ---
   if (persona.id === '1') {
@@ -513,13 +515,13 @@ function synthesizePersonaReply(
 // =========================================================================
 export function generatePawLLMHelperSuggestion(
   action: 'translate' | 'suggest_reply' | 'paw_slang' | 'polish',
-  currentDraft: string,
+  currentDraft: string = '',
   targetPetName?: string
 ): { text: string; pawscript: string; explanation: string } {
   const target = targetPetName || 'friend';
   switch (action) {
     case 'translate': {
-      const draft = currentDraft.trim() || `hello ${target}`;
+      const draft = (currentDraft || '').trim() || `hello ${target}`;
       const ps = translateToPawScript(draft);
       return {
         text: draft,
@@ -542,7 +544,7 @@ export function generatePawLLMHelperSuggestion(
       };
     }
     case 'paw_slang': {
-      const base = currentDraft.trim() || 'play with me';
+      const base = (currentDraft || '').trim() || 'play with me';
       const slangified = `bow! ${base}, zoomies ready, bow bow! 🐾`;
       return {
         text: slangified,
@@ -551,7 +553,7 @@ export function generatePawLLMHelperSuggestion(
       };
     }
     case 'polish': {
-      const base = currentDraft.trim() || 'miss you';
+      const base = (currentDraft || '').trim() || 'miss you';
       const polished = `meo... ${base}, purr meo 🐾`;
       return {
         text: polished,
@@ -566,43 +568,46 @@ export function generatePawLLMHelperSuggestion(
 // Main Inference Function: Dual Output Generation
 // =========================================================================
 export async function generatePawLLMReply(
-  contactId: string,
-  userMessage: string,
+  contactId: string = 'pawllm-helper',
+  userMessage: string = '',
   history: Array<{ senderId: string; text: string }> = []
 ): Promise<PawLLMReply> {
   const startTime = Date.now();
   const persona = PET_PERSONAS[contactId] || PET_PERSONAS['pawllm-helper'] || PET_PERSONAS['1'];
+  const safeText = userMessage || '';
 
-  // 1. Try local Ollama/Mistral bridge first via API route with fast timeout
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 1200);
+  // 1. In browser environment only, try local Ollama/Mistral bridge via API route
+  if (typeof window !== 'undefined') {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 1200);
 
-    const res = await fetch('/api/pawllm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
-      body: JSON.stringify({
-        contactId,
-        userMessage,
-        history: history.slice(-4),
-        persona,
-      }),
-    });
-    clearTimeout(timeout);
+      const res = await fetch('/api/pawllm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contactId,
+          userMessage: safeText,
+          history: (history || []).slice(-4),
+          persona,
+        }),
+      });
+      clearTimeout(timeout);
 
-    if (res.ok) {
-      const data = await res.json();
-      if (data.english && data.pawscript) {
-        return data as PawLLMReply;
+      if (res.ok) {
+        const data = await res.json();
+        if (data.english && data.pawscript) {
+          return data as PawLLMReply;
+        }
       }
+    } catch {
+      // Graceful fallback to client-side embedded PawLLM engine
     }
-  } catch {
-    // Graceful fallback to client-side embedded PawLLM engine
   }
 
   // 2. Embedded PawLLM Bio-Acoustic Reasoning Engine (Short & Realistic)
-  const { english, emotion, cue } = synthesizePersonaReply(persona, userMessage);
+  const { english, emotion, cue } = synthesizePersonaReply(persona, safeText);
   const pawscript = translateToPawScript(english);
   const cueData = BIOACOUSTIC_CUES[cue] || (persona.species === 'Cat' ? BIOACOUSTIC_CUES.purr : BIOACOUSTIC_CUES.bark);
   const latencyMs = Math.max(90, Date.now() - startTime);

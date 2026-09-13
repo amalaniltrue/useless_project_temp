@@ -71,8 +71,10 @@ export async function GET() {
 export async function POST(req: Request) {
   const startTime = Date.now();
   try {
-    const body = await req.json();
-    const { contactId, userMessage, history = [] } = body;
+    const body = await req.json().catch(() => ({}));
+    const contactId = body.contactId || body.id || (body.species === 'cat' ? '1' : body.species === 'dog' ? '2' : 'pawllm-helper');
+    const userMessage = body.userMessage || body.prompt || body.message || body.text || '';
+    const history = Array.isArray(body.history) ? body.history : [];
     const persona = PET_PERSONAS[contactId] || PET_PERSONAS['pawllm-helper'] || PET_PERSONAS['1'];
 
     // 1. Check if local Ollama daemon is available and running

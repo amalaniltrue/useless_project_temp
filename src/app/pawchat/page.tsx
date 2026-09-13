@@ -358,7 +358,7 @@ const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
       pawscript: 'ᛒᐱᚢ ᛒᐱᚢ! ᚺᚢᛗᚪᚾ, ᛁ ᚺᚪᚡᛖ ᚠᚩᚱᛗᚢᛚᚪᛏᛖᛞ ᚪ ᚷᚱᚩᚢᚾᛞᛒᚱᛖᚪᚳᛁᛝ ᚦᛖᛋᛁᛋ ᚩᚾ ᚦᛖ ᚡᛖᛚᚩᚳᛁᛏᛁ ᚩᚠ ᚱᚢᛒᛒᛖᚱ ᛒᚪᛚᛚᛋ! ᚹᚢᚠ!',
       ipa: '[bɑːrk] • Academic Enthusiasm',
       emotion: 'Scholarly Joy',
-      audioCue: '/sounds/animals/dog/dog_play_bark.mp3',
+      audioCue: '/sounds/animals/dog/dog_bark_play.mp3',
       time: '9:00 AM',
       read: true,
       type: 'text',

@@ -51,7 +51,7 @@ const PRESET_REELS = [
   { label: 'Kalyani Pole Vault Record', url: '/reels/reel-pole-vault-cat.mp4', species: 'Cat', sound: '/sounds/animals/cat/cat_trill_sweet.wav' },
   { label: 'Microwave 3AM Salsa', url: '/reels/reel-dancing-cat.mp4', species: 'Cat', sound: '/sounds/animals/cat/cat_meow_continuous.mp3' },
   { label: 'Royal Aristocratic Cackle', url: '/reels/reel-laughing-cats.mp4', species: 'Cat', sound: '/sounds/animals/cat/cat_purr.mp3' },
-  { label: 'Naked Speedster Drift', url: '/reels/reel-naked-speedster.mp4', species: 'Cat', sound: '/sounds/animals/cat/cat_meow_expressive.mp3' },
+  { label: 'Naked Speedster Drift', url: '/reels/reel-naked-speedster.mp4', species: 'Cat', sound: '/sounds/animals/cat/cat_meow_standard.mp3' },
   { label: 'Bombastic Lady Runway', url: '/reels/reel-vacation-mode.mp4', species: 'Dog', sound: '/sounds/animals/dog/dog_pant_active.mp3' },
   { label: 'Missile Frenchie Warrior', url: '/reels/reel-warrior-training.mp4', species: 'Dog', sound: '/sounds/animals/dog/dog_bark_greeting.mp3' },
   { label: 'Big Mom Raw Power Reps', url: '/reels/reel-raw-canine-power.mp4', species: 'Dog', sound: '/sounds/animals/dog/dog_pant_breath.mp3' },

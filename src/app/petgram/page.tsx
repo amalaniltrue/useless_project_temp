@@ -795,7 +795,7 @@ const INITIAL_REELS: PetReel[] = [
     audioTrack: {
       title: 'Sphynx Turbo Drift',
       artist: 'Asbestos',
-      url: '/sounds/animals/cat/cat_meow_expressive.mp3',
+      url: '/sounds/animals/cat/cat_meow_standard.mp3',
     },
     reactions: [
       { type: 'paw', count: 6120 },
