@@ -28,6 +28,8 @@ import {
   User,
   LogOut,
   Edit2,
+  Mail,
+  RotateCcw,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IPadFrame } from '@/components/ui/IPadFrame';
@@ -55,9 +57,11 @@ import {
 // ==========================================
 
 export interface UserProfile {
-  phone: string;
-  countryCode: string;
-  nationalNumber: string;
+  authType?: 'phone' | 'email';
+  email?: string;
+  phone?: string;
+  countryCode?: string;
+  nationalNumber?: string;
   name: string;
   avatar: string;
   about: string;
@@ -178,65 +182,65 @@ export const CONTACTS: Contact[] = [
     lastSeen: 'online',
     avatarUrl: '/pictures/cat/naughty.webp',
     tagline: 'Acrobat auntie verifying gravity',
-    about: 'Just knocked over water glass #15 for experimental physics 🥛😼',
+    about: 'Jump height: 2.1 meters. Water cups on table edges will be tested.',
   },
   {
     id: '4',
     name: 'Emotional Damage',
-    phone: '+1 555-019-3382',
+    phone: '+1 555-019-8833',
     species: 'Cat',
     gender: 'Female',
-    emoji: '😼',
-    gradient: 'from-slate-600 to-neutral-800',
+    emoji: '😿',
+    gradient: 'from-purple-400 to-indigo-600',
     online: false,
-    lastSeen: 'last seen 5h ago',
+    lastSeen: 'last seen 10m ago',
     avatarUrl: '/pictures/cat/portrait-of-a-scared-cat.webp',
-    tagline: '100% emotional damage stare',
-    about: 'Unimpressed. Did that message bring tuna? No? Emotional damage.',
+    tagline: 'Overwhelmed Scottish fold judging you silently',
+    about: 'Judging your life choices from under the bed. Mild panic at loud noises.',
   },
   {
     id: '9',
     name: 'Lady Dimitrescu',
-    phone: '+33 6 55 58 12 34',
+    phone: '+40 21 555 0199',
     species: 'Cat',
     gender: 'Female',
-    emoji: '👑',
-    gradient: 'from-purple-500 to-indigo-700',
+    emoji: '🦁',
+    gradient: 'from-purple-500 to-indigo-800',
     online: true,
     lastSeen: 'online',
-    avatarUrl: '/pictures/cat/CQRCz9RppTd-png__700.webp',
-    tagline: '7-foot aura aristocrat perched on highest tree',
-    about: 'Bow before my 40-inch fluffy tail. Royal chin brushings only 👑',
+    avatarUrl: '/pictures/cat/CWbUskSKeMT-png__700.webp',
+    tagline: '12kg Maine Coon Empress claiming the king bed',
+    about: 'Massive floof empress. Requires salmon treats served on silver saucers 👑',
   },
 
   // 3. Dogs (Strictly User Given)
   {
     id: '2',
     name: 'Benjamin',
-    phone: '+1 555-014-8921',
+    phone: '+1 555-014-3829',
     species: 'Dog',
     gender: 'Male',
-    emoji: '🐕',
-    gradient: 'from-yellow-400 to-amber-600',
+    emoji: '🐶',
+    gradient: 'from-yellow-400 to-amber-500',
     online: true,
     lastSeen: 'online',
     avatarUrl: '/pictures/dog/funny-dog-with-surprised-expression-wearing-glasses-yellow-background_1089554-30720.webp',
-    tagline: 'PhD in Stick Ballistics & Spectacles',
-    about: 'Calculating the terminal velocity of the yellow tennis ball 🎾👓',
+    tagline: 'Golden Retriever scholar researching ball trajectory',
+    about: 'Hold a PhD in treat retrieval. Spectacles worn with dignity 🎾🎓',
   },
   {
     id: '5',
     name: 'Samsung',
-    phone: '+82 10-5555-0192',
+    phone: '+82 2 555 0142',
     species: 'Dog',
     gender: 'Male',
     emoji: '🐕',
-    gradient: 'from-emerald-500 to-teal-700',
+    gradient: 'from-blue-500 to-indigo-600',
     online: true,
     lastSeen: 'online',
     avatarUrl: '/pictures/dog/springer.webp',
-    tagline: 'Snapdragon 120Hz clover scout',
-    about: 'Telemetry locked. Dual olfactory radar online. 120Hz tail wagging 🐕🛰️',
+    tagline: 'Springer Spaniel Scout running perimeter checks',
+    about: '100% focused tracker. Ears flopping in wind, investigating every scent.',
   },
   {
     id: '6',
@@ -296,8 +300,25 @@ export const CONTACTS: Contact[] = [
   },
 ];
 
+// Contextual One-Tap Prompt Suggestions
+export const CONTACT_PROMPT_SUGGESTIONS: Record<string, string[]> = {
+  'pawllm-helper': ['✨ What is best to order?', '🐾 Translate "best friends" to runes', '🩺 Emergency poison guide'],
+  '1': ['🐟 What is best to order?', '☀️ Where is the morning sunbeam?', '📸 Take a royal selfie'],
+  '2': ['🦴 Recommend best treats to order', '🎾 Tell me your ball thesis', '🏊 Ready for lake swim?'],
+  '3': ['🐟 Order best airborne treats', '🥛 Don\'t tap that water glass!', '🧗 How high did you jump?'],
+  '4': ['🐟 Where is your dinner order?', '🦿 Vacuum monster is gone', '🐾 Can I give chin scratches?'],
+  '5': ['🥓 What snacks to order on patrol?', '🐕 Perimeter check status', '🌳 Ready for outdoor park walk?'],
+  '6': ['🍗 What snacks should I order?', '🚀 Launch the sofa rocket!', '💤 Ready for couch cuddles?'],
+  '7': ['📦 What treats should I order?', '⚡ 3 AM zoomies status', '📦 Spinning in the cardboard box'],
+  '8': ['🍗 Best gourmet order for you', '🧊 Refrigerator summit status', '🧘 Explain the cosmic dust'],
+  '9': ['🐟 Royal feast recommendations', '👑 King bed sovereignty report', '✨ Groom the magnificent mane'],
+  '10': ['🍪 Order soothing bone broth treats', '💛 Rest your chin on my knee', '🐕 Ready for gentle park walk?'],
+  '11': ['💅 Order organic duck tenders', '🐩 Sidewalk runway show', '✨ How are the salon curls?'],
+  '12': ['🥩 Order giant marrow bone', '🐾 Give me a 90kg bear hug', '🎾 Bring the slobbery rope toy'],
+};
+
 // ==========================================
-// Pre-populated Conversations
+// Pre-populated Dynamic Conversations
 // ==========================================
 
 const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
@@ -305,7 +326,7 @@ const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
     {
       id: 'h1',
       senderId: 'pawllm-helper',
-      text: '✨ Hello! I am PawLLM Helper, your personal AI assistant in PawChat. You can ask me to translate your messages into PawScript runes, suggest witty replies for your contact pets, or explain feline and canine linguistics. How may I assist your paws today?',
+      text: '✨ Hello human friend! I am PawLLM Helper, your dedicated pet translation copilot. Tap the chips below or type anything to order pet treats, translate phrases into ancient Elder runes, or get veterinary advice!',
       pawscript: '✨ ᛗᛖᐱ! ᛁ ᚪᛗ ᛈᚪᚹᛚᛚᛗ ᚺᛖᛚᛈᛖᚱ. ᚪᛋᚳ ᛗᛖ ᛏᚩ ᛏᚱᚪᚾᛋᛚᚪᛏᛖ ᚩᚱ ᛞᚱᚪᚠᛏ ᛗᛖᛋᛋᚪᚷᛖᛋ!',
       ipa: '[pɔː.ɛl.ɛl.ɛm] • AI Copilot Active',
       emotion: 'AI Message Assistance',
@@ -317,10 +338,10 @@ const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
   ],
   '1': [
     {
-      id: 'm1',
+      id: 'm1_1',
       senderId: '1',
-      text: 'meow! Where are you? The morning sunbeam is arriving on the velvet couch!',
-      pawscript: 'ᛗᛖᐱ! ᚹᚺᛖᚱᛖ ᚪᚱᛖ ᛁᚩᚢ? ᚦᛖ ᛗᚩᚱᚾᛁᛝ ᛋᚢᚾᛒᛖᚪᛗ ᛁᛋ ᚪᚱᚱᛁᚡᛁᛝ ᚩᚾ ᚦᛖ ᚡᛖᛚᚡᛖᛏ ᚳᚩᚢᚳᚺ!',
+      text: 'meow! The morning sunbeam is arriving on the velvet couch. Did you bring fresh wild salmon pâté? meo purr!',
+      pawscript: 'ᛗᛖᐱ! ᚦᛖ ᛗᚩᚱᚾᛁᛝ ᛋᚢᚾᛒᛖᚪᛗ ᛁᛋ ᚪᚱᚱᛁᚡᛁᛝ ᚩᚾ ᚦᛖ ᚡᛖᛚᚡᛖᛏ ᚳᚩᚢᚳᚺ! ᛗᛖᚩ ᚱᚱᚱ!',
       ipa: '[mʲe.oʊ̯] • Aristocratic Purr',
       emotion: 'Aristocratic Purr',
       audioCue: '/sounds/animals/cat/cat_purr.mp3',
@@ -328,38 +349,115 @@ const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
       read: true,
       type: 'text',
     },
-    {
-      id: 'm2',
-      senderId: 'me',
-      text: 'Hey Ramesh! Did you finish your salmon breakfast yet?',
-      pawscript: 'ᚺᛖᛁ ᚱᚪᛗᛖᛋᚺ! ᛞᛁᛞ ᛁᚩᚢ ᚠᛁᚾᛁᛋᚺ ᛁᚩᚢᚱ ᛋᚪᛚᛗᚩᚾ ᛒᚱᛖᚪᚳᚠᚪᛋᛏ ᛁᛖᛏ?',
-      time: '10:31 AM',
-      read: true,
-      type: 'text',
-    },
-    {
-      id: 'm3',
-      senderId: '1',
-      text: 'purr purr! Naturally! Whitefish pâté was sampled with utmost dignity. Come join me for a selfie! meow',
-      pawscript: 'ᚱᚱᚱ ᚱᚱᚱ! ᚾᚪᛏᚢᚱᚪᛚᛚᛁ! ᚹᚺᛁᛏᛖᚠᛁᛋᚺ ᛈᚪᛏᛖ ᚹᚪᛋ ᛋᚪᛗᛈᛚᛖᛞ ᚹᛁᚦ ᚢᛏᛗᚩᛋᛏ ᛞᛁᚷᚾᛁᛏᛁ. ᚳᚩᛗᛖ ᛃᚩᛁᚾ ᛗᛖ ᚠᚩᚱ ᚪ ᛋᛖᛚᚠᛁᛖ! ᛗᛖᐱ',
-      ipa: '[r̥ːːː] • Deep Somatic Purr',
-      emotion: 'Warm Contentment',
-      audioCue: '/sounds/animals/cat/cat_purr.mp3',
-      time: '10:32 AM',
-      read: true,
-      type: 'text',
-    },
   ],
   '2': [
     {
-      id: 'm1',
+      id: 'm2_1',
       senderId: '2',
-      text: 'BARK BARK! Human, I have formulated a groundbreaking thesis on the velocity of rubber balls! woof!',
-      pawscript: 'ᛒᐱᚢ ᛒᐱᚢ! ᚺᚢᛗᚪᚾ, ᛁ ᚺᚪᚡᛖ ᚠᚩᚱᛗᚢᛚᚪᛏᛖᛞ ᚪ ᚷᚱᚩᚢᚾᛞᛒᚱᛖᚪᚳᛁᛝ ᚦᛖᛋᛁᛋ ᚩᚾ ᚦᛖ ᚡᛖᛚᚩᚳᛁᛏᛁ ᚩᚠ ᚱᚢᛒᛒᛖᚱ ᛒᚪᛚᛚᛋ! ᚹᚢᚠ!',
+      text: 'BARK BARK! Human colleague! I have formulated a groundbreaking scientific thesis on the aerodynamic velocity of rubber balls! woof!',
+      pawscript: 'ᛒᐱᚢ ᛒᐱᚢ! ᚺᚢᗡᚪᚾ, ᛁ ᚺᚪᚡᛖ ᚠᚩᚱᛗᚢᛚᚪᛏᛖᛞ ᚪ ᚷᚱᚩᚢᚾᛞᛒᚱᛖᚪᚳᛁᛝ ᚦᛖᛋᛁᛋ ᚩᚾ ᚦᛖ ᚡᛖᛚᚩᚳᛁᛏᛁ ᚩᚠ ᚱᚢᛒᛒᛖᚱ ᛒᚪᛚᛚᛋ! ᚹᚢᚠ!',
       ipa: '[bɑːrk] • Academic Enthusiasm',
       emotion: 'Scholarly Joy',
       audioCue: '/sounds/animals/dog/dog_bark_play.mp3',
       time: '9:00 AM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '3': [
+    {
+      id: 'm3_1',
+      senderId: '3',
+      text: 'chirp meo! Refrigerator summit achieved at 2.1 meters! Water glass on the dining counter is looking dangerously tempting, meo!',
+      pawscript: 'ᛏᛊᛁᚱᛈ ᛗᛖᚩ! ᚱᛖᚠᚱᛁᚷᛖᚱᚪᛏᚩᚱ ᛊᚢᛗᛗᛁᛏ ᚪᛏᛊᚺᛁᛁᚡᛖᛞ, ᛗᛖᚩ!',
+      ipa: '[tʃɪɹp] • High Acrobat',
+      emotion: 'Acrobat Joy',
+      audioCue: '/sounds/animals/cat/cat_trill_sweet.wav',
+      time: '11:15 AM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '6': [
+    {
+      id: 'm6_1',
+      senderId: '6',
+      text: 'snort bow! Heat-seeking sofa rocket armed! Looking for a warm lap to crash land into immediately, bow bow!',
+      pawscript: 'ᛊᚾᚩᚱᛏ ᛒᚪᚢ! ᚺᛁᛁᛏ ᛊᛁᛁᚲᛁᛝ ᛊᚩᚠᚪ ᚱᚩᚲᛖᛏ ᚪᚱᛗᛖᛞ, ᛒᚪᚢ!',
+      ipa: '[pænt] • Couch Rocket',
+      emotion: 'Couch Rocket',
+      audioCue: '/sounds/animals/dog/dog_pant_active.mp3',
+      time: '11:45 AM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '7': [
+    {
+      id: 'm7_1',
+      senderId: '7',
+      text: 'meo meo! Delivery box claimed! Currently spinning at 800 RPM in the cardboard box! One orange brain cell operating at maximum joy! purr meo!',
+      pawscript: 'ᛗᛖᚩ ᛗᛖᚩ! ᛞᛖᛚᛁᚡᛖᚱᛁ ᛒᚩᚲᛊ ᚲᛚᚪᛁᛗᛖᛞ! ᚱᚱᚱ ᛗᛖᚩ!',
+      ipa: '[tʃɪɹp] • Box Spin',
+      emotion: 'Box Spin 800RPM',
+      audioCue: '/sounds/animals/cat/cat_meow_continuous.mp3',
+      time: '12:00 PM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '8': [
+    {
+      id: 'm8_1',
+      senderId: '8',
+      text: 'purr... perched on the refrigerator summit for 6 hours. cosmic dust particles observed in absolute stoic silence. meo.',
+      pawscript: 'ᚱᚱᚱ... ᛈᛖᚱᛏᛊᚺᛖᛞ ᚩᚾ ᚱᛖᚠᚱᛁᚷᛖᚱᚪᛏᚩᚱ ᛊᚢᛗᛗᛁᛏ. ᛗᛖᚩ.',
+      ipa: '[r̥ːːː] • Stoic Zen',
+      emotion: 'Stoic Zen',
+      audioCue: '/sounds/animals/cat/cat_purr.mp3',
+      time: '12:15 PM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '10': [
+    {
+      id: 'm10_1',
+      senderId: '10',
+      text: 'bow... resting my warm chin on your knee. you have worked hard today, remember you are loved. bow purr.',
+      pawscript: 'ᛒᚪᚢ... ᚱᛖᛋᛏᛁᛝ ᛗᚪᛁ ᚹᚪᚱᛗ ᛏᛊᛁᚾ ᚩᚾ ᛁᚩᚢᚱ ᚾᛁᛁ. ᛒᚪᚢ ᚱᚱᚱ.',
+      ipa: '[wʊf] • Therapy Chin',
+      emotion: 'Therapy Chin',
+      audioCue: '/sounds/animals/dog/dog_bark_greeting.mp3',
+      time: '1:00 PM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '11': [
+    {
+      id: 'm11_1',
+      senderId: '11',
+      text: 'bow bow darling! salon curls freshly fluffed, sidewalk runway ready! only gourmet organic duck tenders for the queen, bow!',
+      pawscript: 'ᛒᚪᚢ ᛒᚪᚢ ᛞᚪᚱᛚᛁᛝ! ᛊᚪᛚᚩᚾ ᚲᚢᚱᛚᛋ ᚠᛚᚢᚠᚠᛖᛞ, ᛒᚪᚢ!',
+      ipa: '[bɑːrk] • Glamour Diva',
+      emotion: 'Runway Diva',
+      audioCue: '/sounds/animals/dog/dog_pant_active.mp3',
+      time: '1:30 PM',
+      read: true,
+      type: 'text',
+    },
+  ],
+  '12': [
+    {
+      id: 'm12_1',
+      senderId: '12',
+      text: 'woof bow! 90kg gentle bear hugs ready! brought you my favorite slobbery rope toy, bow bow!',
+      pawscript: 'ᚹᚢᚠ ᛒᚪᚢ! ᚾᚪᛁᚾᛏᛁ ᚲᚷ ᛒᛖᚪᚱ ᚺᚢᚷᛋ ᚱᛁᛁᛞᛁ! ᛒᚪᚢ ᛒᚪᚢ!',
+      ipa: '[wʊf] • 90kg Bear Hug',
+      emotion: '90kg Bear Hug',
+      audioCue: '/sounds/animals/dog/dog_pant_breath.mp3',
+      time: '2:00 PM',
       read: true,
       type: 'text',
     },
@@ -594,11 +692,18 @@ function WhatsAppRegistrationScreen({
 }: {
   onRegisterComplete: (profile: UserProfile) => void;
 }) {
+  const [authMode, setAuthMode] = useState<'phone' | 'email'>('phone');
   const [step, setStep] = useState<'phone' | 'otp' | 'profile'>('phone');
   const [countryCode, setCountryCode] = useState('+91');
   const [nationalNumber, setNationalNumber] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
-  const [smsBanner, setSmsBanner] = useState<string | null>(null);
+  const [expectedOtp, setExpectedOtp] = useState<string>('7492');
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [smsBanner, setSmsBanner] = useState<{ title: string; body: string; code: string; isEmail: boolean } | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('🧑');
   const [about, setAbout] = useState('Hey there! I am using PawChat 🐾');
@@ -624,24 +729,87 @@ function WhatsAppRegistrationScreen({
     'Busy eating snacks 🍗',
   ];
 
-  const handlePhoneSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nationalNumber.trim() || nationalNumber.length < 5) return;
+  // Resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setTimeout(() => setResendCooldown((prev) => prev - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendCooldown]);
+
+  const triggerSendOtp = async (destination: string, type: 'phone' | 'email') => {
+    setIsSendingOtp(true);
+    setOtpError(null);
+    let code = Math.floor(1000 + Math.random() * 9000).toString();
+
+    try {
+      const res = await fetch('/api/auth/otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send', destination, type }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.code) code = data.code;
+      }
+    } catch {
+      // Offline fallback: random dynamic code generated locally
+    } finally {
+      setIsSendingOtp(false);
+    }
+
+    setExpectedOtp(code);
+    setResendCooldown(30);
     playTapTone();
-    setSmsBanner(`💬 SMS • PawOS: Your PawChat verification code is 🐾 7492. Do not share.`);
+
+    if (type === 'email') {
+      setSmsBanner({
+        title: '✉️ Email Inbox • PawChat Security',
+        body: `Verification code for ${destination} is:`,
+        code,
+        isEmail: true,
+      });
+    } else {
+      setSmsBanner({
+        title: '💬 Carrier SMS • PawOS Verification',
+        body: `Your PawChat verification code is:`,
+        code,
+        isEmail: false,
+      });
+    }
+
     setStep('otp');
   };
 
-  const handleAutoFillOtp = () => {
+  const handlePhoneOrEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (authMode === 'phone') {
+      if (!nationalNumber.trim() || nationalNumber.length < 5) return;
+      const destination = `${countryCode} ${nationalNumber.trim()}`;
+      triggerSendOtp(destination, 'phone');
+    } else {
+      if (!emailAddress.trim() || !emailAddress.includes('@')) return;
+      triggerSendOtp(emailAddress.trim().toLowerCase(), 'email');
+    }
+  };
+
+  const handleAutoFillOtp = (code: string) => {
     playTapTone();
-    setOtp(['7', '4', '9', '2']);
+    setOtpError(null);
+    setOtp(code.split('').slice(0, 4));
   };
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const entered = otp.join('');
     if (entered.length < 4) return;
+
+    if (entered !== expectedOtp) {
+      setOtpError('Incorrect code. Please check and try again.');
+      return;
+    }
+
     playTapTone();
+    setOtpError(null);
     setStep('profile');
   };
 
@@ -651,9 +819,11 @@ function WhatsAppRegistrationScreen({
     playCallConnectedTone();
 
     const fullProfile: UserProfile = {
-      phone: `${countryCode} ${nationalNumber.trim()}`,
-      countryCode,
-      nationalNumber: nationalNumber.trim(),
+      authType: authMode,
+      phone: authMode === 'phone' ? `${countryCode} ${nationalNumber.trim()}` : undefined,
+      email: authMode === 'email' ? emailAddress.trim() : undefined,
+      countryCode: authMode === 'phone' ? countryCode : undefined,
+      nationalNumber: authMode === 'phone' ? nationalNumber.trim() : undefined,
       name: name.trim(),
       avatar,
       about: about.trim(),
@@ -667,9 +837,12 @@ function WhatsAppRegistrationScreen({
     onRegisterComplete(fullProfile);
   };
 
+  const currentDestination =
+    authMode === 'phone' ? `${countryCode} ${nationalNumber}` : emailAddress;
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-b from-neutral-900 to-neutral-950 text-white relative select-none">
-      {/* Simulated Push Notification Banner */}
+      {/* Real-Time Live Push Notification Banner */}
       <AnimatePresence>
         {smsBanner && (
           <motion.div
@@ -678,16 +851,26 @@ function WhatsAppRegistrationScreen({
             exit={{ opacity: 0, y: -40 }}
             className="absolute top-4 left-4 right-4 max-w-md mx-auto bg-neutral-800/95 border border-emerald-500/40 backdrop-blur-md rounded-2xl p-3 shadow-2xl flex items-center justify-between text-xs z-50"
           >
-            <div className="flex items-center gap-2">
-              <span className="text-xl">📩</span>
-              <div>
-                <p className="font-bold text-emerald-400">Carrier SMS • Verification</p>
-                <p className="text-gray-200 text-[11px]">{smsBanner}</p>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="text-2xl flex-shrink-0">{smsBanner.isEmail ? '✉️' : '💬'}</span>
+              <div className="min-w-0">
+                <p className="font-bold text-emerald-400 text-xs truncate">{smsBanner.title}</p>
+                <p className="text-gray-200 text-[11px] truncate">
+                  {smsBanner.body} <strong className="text-amber-300 font-mono text-sm tracking-wider">🐾 {smsBanner.code}</strong>
+                </p>
               </div>
             </div>
-            <button onClick={() => setSmsBanner(null)} className="text-gray-400 hover:text-white p-1">
-              <X size={14} />
-            </button>
+            <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+              <button
+                onClick={() => handleAutoFillOtp(smsBanner.code)}
+                className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold shadow-xs transition-colors"
+              >
+                Auto-fill
+              </button>
+              <button onClick={() => setSmsBanner(null)} className="text-gray-400 hover:text-white p-1">
+                <X size={14} />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -704,72 +887,133 @@ function WhatsAppRegistrationScreen({
           </p>
         </div>
 
-        {/* STEP 1: Phone Number Input */}
+        {/* STEP 1: Phone or Email Selector & Input */}
         {step === 'phone' && (
-          <form onSubmit={handlePhoneSubmit} className="space-y-4">
-            <div className="text-center mb-4">
-              <h3 className="font-bold text-sm">Enter your phone number</h3>
+          <form onSubmit={handlePhoneOrEmailSubmit} className="space-y-4">
+            {/* Method Tabs */}
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100 dark:bg-neutral-800 rounded-xl mb-4 text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => {
+                  playTapTone();
+                  setAuthMode('phone');
+                }}
+                className={`py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  authMode === 'phone'
+                    ? 'bg-white dark:bg-neutral-700 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                    : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                }`}
+              >
+                <Phone size={13} />
+                <span>Mobile Phone</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  playTapTone();
+                  setAuthMode('email');
+                }}
+                className={`py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  authMode === 'email'
+                    ? 'bg-white dark:bg-neutral-700 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                    : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                }`}
+              >
+                <Mail size={13} />
+                <span>Email Address</span>
+              </button>
+            </div>
+
+            <div className="text-center mb-3">
+              <h3 className="font-bold text-sm">
+                {authMode === 'phone' ? 'Enter your phone number' : 'Enter your email address'}
+              </h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                PawChat will verify your account using an SMS message (simulated).
+                {authMode === 'phone'
+                  ? 'We will send a 4-digit verification code via SMS.'
+                  : 'We will send a 4-digit verification code to your email inbox.'}
               </p>
             </div>
 
-            {/* Country Dropdown */}
-            <div>
-              <label className="text-[11px] font-semibold text-gray-400 block mb-1">Country / Region</label>
-              <select
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-                className="w-full px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 border border-black/5 dark:border-white/10"
-              >
-                {countryCodes.map((c) => (
-                  <option key={c.name} value={c.code}>
-                    {c.flag} {c.name} ({c.code})
-                  </option>
-                ))}
-              </select>
-            </div>
+            {authMode === 'phone' ? (
+              <>
+                {/* Country Dropdown */}
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">Country / Region</label>
+                  <select
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 border border-black/5 dark:border-white/10"
+                  >
+                    {countryCodes.map((c) => (
+                      <option key={c.name} value={c.code}>
+                        {c.flag} {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            {/* Phone Number Field */}
-            <div>
-              <label className="text-[11px] font-semibold text-gray-400 block mb-1">Mobile Number</label>
-              <div className="flex gap-2">
-                <span className="px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-xs font-mono font-bold flex items-center border border-black/5 dark:border-white/10">
-                  {countryCode}
-                </span>
-                <input
-                  type="tel"
-                  required
-                  placeholder="e.g. 98450 12345"
-                  value={nationalNumber}
-                  onChange={(e) => setNationalNumber(e.target.value.replace(/\D/g, ''))}
-                  className="flex-1 px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-500 border border-black/5 dark:border-white/10"
-                />
+                {/* Phone Number Field */}
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">Mobile Number</label>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-xs font-mono font-bold flex items-center border border-black/5 dark:border-white/10">
+                      {countryCode}
+                    </span>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. 98450 12345"
+                      value={nationalNumber}
+                      onChange={(e) => setNationalNumber(e.target.value.replace(/\D/g, ''))}
+                      className="flex-1 px-3 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-500 border border-black/5 dark:border-white/10"
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Email Input Field */
+              <div>
+                <label className="text-[11px] font-semibold text-gray-400 block mb-1">Email Address</label>
+                <div className="relative">
+                  <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@example.com"
+                    value={emailAddress}
+                    onChange={(e) => setEmailAddress(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-neutral-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500 border border-black/5 dark:border-white/10"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <button
               type="submit"
-              disabled={nationalNumber.length < 5}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98 mt-4"
+              disabled={
+                isSendingOtp ||
+                (authMode === 'phone' ? nationalNumber.length < 5 : !emailAddress.includes('@'))
+              }
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98 mt-4 flex items-center justify-center gap-2 cursor-pointer"
             >
-              Verify Phone Number
+              <span>{isSendingOtp ? 'Sending Code...' : `Send Verification Code ➔`}</span>
             </button>
           </form>
         )}
 
         {/* STEP 2: Enter Verification Code */}
         {step === 'otp' && (
-          <form onSubmit={handleOtpSubmit} className="space-y-5">
+          <form onSubmit={handleOtpSubmit} className="space-y-4">
             <div className="text-center">
-              <h3 className="font-bold text-sm">Verifying {countryCode} {nationalNumber}</h3>
+              <h3 className="font-bold text-sm">Verify {currentDestination}</h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Enter the 4-digit code sent via SMS.
+                Enter the 4-digit code dispatched to your {authMode === 'phone' ? 'SMS' : 'email'}.
               </p>
             </div>
 
             {/* 4 Digit Boxes */}
-            <div className="flex justify-center gap-3 my-4">
+            <div className="flex justify-center gap-3 my-3">
               {[0, 1, 2, 3].map((idx) => (
                 <input
                   key={idx}
@@ -777,39 +1021,63 @@ function WhatsAppRegistrationScreen({
                   maxLength={1}
                   value={otp[idx] || ''}
                   onChange={(e) => {
-                    const val = e.target.value;
+                    const val = e.target.value.replace(/\D/g, '');
                     const next = [...otp];
                     next[idx] = val;
                     setOtp(next);
+                    setOtpError(null);
                   }}
                   className="w-12 h-14 text-center text-xl font-bold font-mono bg-gray-100 dark:bg-neutral-800 border-2 border-emerald-500/40 rounded-xl outline-none focus:border-emerald-500"
                 />
               ))}
             </div>
 
-            <div className="flex items-center justify-between text-xs">
+            {/* Error Message */}
+            {otpError && (
+              <p className="text-xs text-rose-500 text-center font-semibold bg-rose-50 dark:bg-rose-950/40 p-2 rounded-xl border border-rose-200 dark:border-rose-900">
+                {otpError}
+              </p>
+            )}
+
+            <div className="flex items-center justify-between text-xs pt-1">
               <button
                 type="button"
-                onClick={handleAutoFillOtp}
-                className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1"
+                onClick={() => handleAutoFillOtp(expectedOtp)}
+                className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <span>⚡ Auto-fill (7492)</span>
+                <span>⚡ Auto-fill ({expectedOtp})</span>
               </button>
+
               <button
                 type="button"
-                onClick={() => setStep('phone')}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                disabled={resendCooldown > 0 || isSendingOtp}
+                onClick={() => triggerSendOtp(currentDestination, authMode)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-50 cursor-pointer"
               >
-                Wrong Number?
+                {resendCooldown > 0 ? `Resend (${resendCooldown}s)` : 'Resend Code'}
+              </button>
+            </div>
+
+            <div className="text-center pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('phone');
+                  setOtp(['', '', '', '']);
+                  setOtpError(null);
+                }}
+                className="text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 underline"
+              >
+                Change {authMode === 'phone' ? 'Phone Number' : 'Email Address'}
               </button>
             </div>
 
             <button
               type="submit"
               disabled={otp.join('').length < 4}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98"
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98 cursor-pointer mt-2"
             >
-              Verify Code
+              Verify Code & Continue
             </button>
           </form>
         )}
@@ -887,7 +1155,7 @@ function WhatsAppRegistrationScreen({
             <button
               type="submit"
               disabled={!name.trim()}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98 mt-2"
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-98 mt-2 cursor-pointer"
             >
               Finish & Start Chatting 🐾
             </button>
@@ -1387,7 +1655,7 @@ export default function PawChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const stopRingRef = useRef<(() => void) | null>(null);
 
-  // Check registration on initial mount asynchronously
+  // Check registration and load conversations on initial mount asynchronously
   useEffect(() => {
     let cancelled = false;
     Promise.resolve().then(() => {
@@ -1399,6 +1667,14 @@ export default function PawChatPage() {
         } else {
           setIsRegistering(true);
         }
+
+        const savedConvs = localStorage.getItem('pawchat_conversations_v3');
+        if (savedConvs) {
+          const parsed = JSON.parse(savedConvs);
+          if (parsed && typeof parsed === 'object') {
+            setChatMessages((prev) => ({ ...prev, ...parsed }));
+          }
+        }
       } catch {
         setIsRegistering(true);
       }
@@ -1408,6 +1684,13 @@ export default function PawChatPage() {
       cancelled = true;
     };
   }, []);
+
+  // Persist conversations
+  useEffect(() => {
+    try {
+      localStorage.setItem('pawchat_conversations_v3', JSON.stringify(chatMessages));
+    } catch {}
+  }, [chatMessages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1586,6 +1869,21 @@ export default function PawChatPage() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleClearChat = () => {
+    if (!selectedChat) return;
+    playTapTone();
+    setChatMessages((prev) => {
+      const updated = {
+        ...prev,
+        [selectedChat]: [],
+      };
+      try {
+        localStorage.setItem('pawchat_conversations_v3', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
   };
 
   const liveRunePreview = messageInput.trim() ? translateToPawScript(messageInput) : '';
@@ -1883,6 +2181,15 @@ export default function PawChatPage() {
                   >
                     <Info size={16} />
                   </button>
+
+                  {/* Clear Chat History */}
+                  <button
+                    onClick={handleClearChat}
+                    className="w-9 h-9 rounded-full bg-gray-100 dark:bg-neutral-800 hover:bg-rose-500 hover:text-white flex items-center justify-center text-gray-600 dark:text-gray-300 transition-colors"
+                    title="Clear Conversation History"
+                  >
+                    <RotateCcw size={15} />
+                  </button>
                 </div>
               </div>
 
@@ -2032,6 +2339,27 @@ export default function PawChatPage() {
                   />
                 )}
               </AnimatePresence>
+
+              {/* Quick Prompt Suggestions for Selected Contact */}
+              {selectedChat && CONTACT_PROMPT_SUGGESTIONS[selectedChat]?.length > 0 && (
+                <div className="px-3 py-1.5 bg-gray-50 dark:bg-neutral-900/90 border-t border-black/5 dark:border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex-shrink-0 flex items-center gap-1">
+                    <Sparkles size={11} className="text-emerald-500" /> Suggestions:
+                  </span>
+                  {CONTACT_PROMPT_SUGGESTIONS[selectedChat].map((promptText, pIdx) => (
+                    <button
+                      key={pIdx}
+                      onClick={() => {
+                        playTapTone();
+                        setMessageInput(promptText);
+                      }}
+                      className="flex-shrink-0 px-2.5 py-1 rounded-full bg-white dark:bg-neutral-800 hover:bg-emerald-50 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-black/5 dark:border-white/10 text-[11px] font-medium transition-all hover:scale-102 cursor-pointer shadow-2xs"
+                    >
+                      {promptText}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Composer Input Bar */}
               <div className="bg-white dark:bg-neutral-900 px-3 py-3 border-t border-black/10 dark:border-white/10">

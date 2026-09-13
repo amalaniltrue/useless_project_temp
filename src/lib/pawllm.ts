@@ -201,11 +201,49 @@ export const BIOACOUSTIC_CUES: Record<string, { rune: string; ipa: string; audio
 // =========================================================================
 // Realistic Short AI Helper Responses (With meo / purr)
 // =========================================================================
+// =========================================================================
+// Realistic Short AI Helper Responses (With meo / purr)
+// =========================================================================
 function synthesizeAiHelperReply(userText: string = ''): { english: string; emotion: string; cue: string } {
   const safe = userText || '';
   const t = safe.trim().toLowerCase();
 
-  // 1. Translation
+  // 1. Order / Food / Treats / Recommendations ("order something whats best")
+  if (
+    t.includes('order') ||
+    t.includes('food') ||
+    t.includes('treat') ||
+    t.includes('snack') ||
+    t.includes('eat') ||
+    t.includes('menu') ||
+    t.includes('buy') ||
+    t.includes('best to eat') ||
+    t.includes('whats best') ||
+    t.includes('what is best') ||
+    t.includes('recommend') ||
+    t.includes('hungry')
+  ) {
+    const foodReplies = [
+      {
+        english: `meo purr! for cats order wild salmon pâté! for dogs order peanut butter marrow bones, meo!`,
+        emotion: 'Gourmet Advice',
+        cue: 'purr',
+      },
+      {
+        english: `meo! freeze-dried chicken livers are the top-rated treat! order two packs, purr meo!`,
+        emotion: 'Snack Guide',
+        cue: 'purr',
+      },
+      {
+        english: `meo purr! best order: steamed tuna flakes for felines, crunchy beef tendon for canines, meo!`,
+        emotion: 'Chef PawLLM',
+        cue: 'purr',
+      },
+    ];
+    return foodReplies[Math.floor(Math.random() * foodReplies.length)];
+  }
+
+  // 2. Translation & Runes
   if (
     t.includes('translate') ||
     t.startsWith('how to say') ||
@@ -233,19 +271,37 @@ function synthesizeAiHelperReply(userText: string = ''): { english: string; emot
     };
   }
 
-  // 2. Who are you / help
-  if (t.includes('who are you') || t.includes('what can you do') || t.includes('help')) {
+  // 3. Play & Activities
+  if (t.includes('play') || t.includes('ball') || t.includes('toy') || t.includes('laser') || t.includes('game') || t.includes('zoomies')) {
     return {
-      english: `meo! I am PawLLM Helper! I translate words to PawScript runes and guide your pets, purr meo!`,
-      emotion: 'AI Helper',
+      english: `meo! feather wand or red laser for cats, squeaky tennis ball for dogs, purr meo!`,
+      emotion: 'Play Advice',
+      cue: 'chirp',
+    };
+  }
+
+  // 4. Sleep & Rest
+  if (t.includes('sleep') || t.includes('nap') || t.includes('bed') || t.includes('tired')) {
+    return {
+      english: `purr meo... pets sleep 12-16 hours daily. find a warm sunbeam and rest, meo!`,
+      emotion: 'Cozy Nap',
       cue: 'purr',
     };
   }
 
-  // 3. Animal science / why
+  // 5. Emergency / Health / Poison
+  if (t.includes('sick') || t.includes('poison') || t.includes('toxic') || t.includes('vet') || t.includes('chocolate') || t.includes('grape')) {
+    return {
+      english: `meo alert! chocolate, grapes, and onions are toxic! contact 24/7 vet immediately, meo!`,
+      emotion: 'Emergency Alert',
+      cue: 'hiss',
+    };
+  }
+
+  // 6. Science / Acoustics / Why
   if (t.includes('why') && (t.includes('purr') || t.includes('cat'))) {
     return {
-      english: `purr meo! cats purr at 20-140Hz to heal bones and calm nerves, meo!`,
+      english: `purr meo! cats purr at 20-140Hz to heal bones and soothe stress, meo!`,
       emotion: 'Feline Science',
       cue: 'purr',
     };
@@ -253,33 +309,42 @@ function synthesizeAiHelperReply(userText: string = ''): { english: string; emot
 
   if (t.includes('why') && (t.includes('bark') || t.includes('wag') || t.includes('dog'))) {
     return {
-      english: `bow bow! dogs wag tails to show mood and spread pack scent, bow!`,
+      english: `bow bow! dogs wag tails to signal emotion and disperse pack scents, bow!`,
       emotion: 'Canine Science',
       cue: 'bark',
     };
   }
 
-  // 4. Jokes
+  // 7. Identity & Help
+  if (t.includes('who are you') || t.includes('what can you do') || t.includes('help')) {
+    return {
+      english: `meo! I am PawLLM Helper! I translate animal runes, suggest replies, and guide pet care, purr meo!`,
+      emotion: 'AI Helper',
+      cue: 'purr',
+    };
+  }
+
+  // 8. Jokes & Humor
   if (t.includes('joke') || t.includes('funny')) {
     return {
-      english: `meo! why did the cat sit on the computer? to catch the mouse, meo purr!`,
+      english: `meo! why did the cat sit on the laptop? to keep an eye on the mouse, purr meo!`,
       emotion: 'Quick Joke',
       cue: 'chirp',
     };
   }
 
-  // 5. Greetings
-  if (t.includes('hello') || t.includes('hi') || t.includes('hey') || t.startsWith('sup')) {
+  // 9. Pure Greetings (only when short greeting without complex question)
+  if (t === 'hi' || t === 'hello' || t === 'hey' || t.startsWith('hi ') || t.startsWith('hello ') || t.startsWith('hey ')) {
     return {
-      english: `meo! hello friend! PawLLM ready for translations, purr meo!`,
+      english: `meo! hello friend! PawLLM ready. ask me about treats, runes, or pet chat, purr meo!`,
       emotion: 'Friendly Meo',
       cue: 'purr',
     };
   }
 
-  // 6. Default realistic short helper
+  // 10. Default realistic short helper
   return {
-    english: `meo purr! heard you clearly, ready to translate into PawScript runes, meo!`,
+    english: `meo purr! heard you clearly. I can translate messages or recommend best pet treats, meo!`,
     emotion: 'Ready Helper',
     cue: 'purr',
   };
@@ -293,68 +358,95 @@ export function synthesizePersonaReply(
   userText: string = ''
 ): { english: string; emotion: string; cue: string } {
   const safeText = userText || '';
-  // Check AI Assistant
   if (persona.id === 'pawllm-helper' || persona.species === 'AI Assistant') {
     return synthesizeAiHelperReply(safeText);
   }
 
   const lower = safeText.toLowerCase();
 
-  // --- 1. RAMESH (Persian Cat) ---
+  // --- 1. RAMESH (Persian Cat - Aristocrat) ---
   if (persona.id === '1') {
-    if (lower.includes('food') || lower.includes('treat') || lower.includes('fish') || lower.includes('tuna') || lower.includes('eat')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('eat') || lower.includes('best') || lower.includes('hungry')) {
       return {
-        english: `meo... tuna smells fresh. put it on my saucer, meo.`,
-        emotion: 'Hungry Persian',
+        english: `meo! order the wild salmon pâté or steamed tuna flakes, meo purr! only the finest fish!`,
+        emotion: 'Gourmet Salmon',
         cue: 'purr',
       };
     }
-    if (lower.includes('sleep') || lower.includes('nap') || lower.includes('bed')) {
+    if (lower.includes('sleep') || lower.includes('nap') || lower.includes('bed') || lower.includes('sunbeam')) {
       return {
-        english: `purr... warm sunbeam on my cushion. napping now, meo.`,
+        english: `purr... warm morning sunbeam on velvet couch. curling up to nap, meo.`,
         emotion: 'Sunbeam Nap',
         cue: 'purr',
       };
     }
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('pet')) {
+    if (lower.includes('selfie') || lower.includes('photo') || lower.includes('look')) {
       return {
-        english: `meo! rubbing my cheek against your leg. pet my chin, meo purr.`,
+        english: `meo purr! camera ready. capture my regal Persian whiskers with dignity, meo!`,
+        emotion: 'Selfie King',
+        cue: 'meow',
+      };
+    }
+    if (lower.includes('love') || lower.includes('pet') || lower.includes('scratch') || lower.includes('chin')) {
+      return {
+        english: `meo! rubbing my cheek against your leg. pet my chin gently, meo purr.`,
         emotion: 'Gentle Rub',
+        cue: 'purr',
+      };
+    }
+    if (lower === 'hi' || lower === 'hello' || lower.startsWith('hi ') || lower.startsWith('hello ')) {
+      return {
+        english: `meo! greetings human. did you bring fresh whitefish for my saucer, meo purr?`,
+        emotion: 'Dignified Meo',
         cue: 'meow',
       };
     }
     return {
-      english: `meo? ears twitched. looking at you lazily from my cushion, meo.`,
+      english: `meo? ears twitched. looking at you lazily from my velvet cushion, meo purr.`,
       emotion: 'Lazy Gaze',
       cue: 'purr',
     };
   }
 
-  // --- 2. BENJAMIN (Golden Retriever) ---
+  // --- 2. BENJAMIN (Golden Retriever Scholar) ---
   if (persona.id === '2') {
-    if (lower.includes('ball') || lower.includes('stick') || lower.includes('fetch') || lower.includes('play')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('eat') || lower.includes('best') || lower.includes('hungry')) {
       return {
-        english: `bow bow! ball in your hand? throw it fast, bow!`,
-        emotion: 'Fetch Hype',
+        english: `bow bow! definitely order peanut butter crunchies and roasted marrow bone, bow! best treats!`,
+        emotion: 'Peanut Butter Hype',
         cue: 'bark',
       };
     }
-    if (lower.includes('food') || lower.includes('treat') || lower.includes('eat')) {
+    if (lower.includes('ball') || lower.includes('fetch') || lower.includes('play') || lower.includes('toy')) {
       return {
-        english: `bow! heard the treat bag crinkle! drool dripping, bow bow!`,
-        emotion: 'Treat Drool',
+        english: `bow bow! ball in your hand? trajectory calculated, throw it fast, bow!`,
+        emotion: 'Ball Physics',
         cue: 'bark',
       };
     }
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('good boy')) {
+    if (lower.includes('swim') || lower.includes('water') || lower.includes('lake')) {
       return {
-        english: `bow bow! tail wagging like a propeller, so happy, bow!`,
+        english: `bow! lake swimming activates maximum retriever joy! splash splash, bow bow!`,
+        emotion: 'Lake Zoomies',
+        cue: 'woof',
+      };
+    }
+    if (lower.includes('love') || lower.includes('good boy') || lower.includes('pet')) {
+      return {
+        english: `bow bow! tail wagging like a propeller, happiest dog on earth, bow!`,
         emotion: 'Wagging Tail',
         cue: 'woof',
       };
     }
+    if (lower === 'hi' || lower === 'hello' || lower.startsWith('hi ') || lower.startsWith('hello ')) {
+      return {
+        english: `bow bow! greetings colleague! ready for intellectual research and fetch, bow!`,
+        emotion: 'Scholar Greeting',
+        cue: 'bark',
+      };
+    }
     return {
-      english: `bow bow? head tilted sideways, sniffing your fingers curious, bow!`,
+      english: `bow bow? head tilted sideways, spectacles adjusted, sniffing your hand, bow!`,
       emotion: 'Curious Tilt',
       cue: 'woof',
     };
@@ -362,149 +454,243 @@ export function synthesizePersonaReply(
 
   // --- 3. KALYANI (Acrobat Cat) ---
   if (persona.id === '3') {
-    if (lower.includes('water') || lower.includes('glass') || lower.includes('table')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
       return {
-        english: `meo! water glass on table edge... tap tap, meo!`,
+        english: `meo meo! order freeze-dried salmon bites I can catch in mid-air, purr meo!`,
+        emotion: 'Airborne Treat',
+        cue: 'chirp',
+      };
+    }
+    if (lower.includes('water') || lower.includes('glass') || lower.includes('table') || lower.includes('gravity')) {
+      return {
+        english: `meo! water glass on table edge... testing gravity... tap tap, meo!`,
         emotion: 'Glass Tap',
         cue: 'chirp',
       };
     }
-    if (lower.includes('food') || lower.includes('treat')) {
+    if (lower.includes('jump') || lower.includes('climb') || lower.includes('play')) {
       return {
-        english: `meo meo! cabinet door opened! snack for me, purr meo!`,
-        emotion: 'Snack Dash',
+        english: `chirp meo! sprang from chair to top shelf! gravity verified, meo!`,
+        emotion: 'Shelf Acrobat',
         cue: 'chirp',
       };
     }
     return {
-      english: `chirp meo! jumping from chair to table, what is that, meo?`,
-      emotion: 'Chair Hop',
+      english: `chirp meo! tail high in the air, trotting along the windowsill, purr meo!`,
+      emotion: 'Windowsill Trot',
       cue: 'chirp',
     };
   }
 
   // --- 4. EMOTIONAL DAMAGE (Scottish Fold) ---
   if (persona.id === '4') {
-    if (lower.includes('vacuum') || lower.includes('clean') || lower.includes('noise')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
       return {
-        english: `hiss! loud noisy monster on rug! running under bed, meo!`,
-        emotion: 'Vacuum Hiss',
-        cue: 'hiss',
-      };
-    }
-    if (lower.includes('treat') || lower.includes('food')) {
-      return {
-        english: `meo... staring unblinking. where is my tuna, meo?`,
-        emotion: 'Tuna Stare',
+        english: `meo... order imported ocean salmon. and do not be late with dinner, meo.`,
+        emotion: 'Stern Tuna Order',
         cue: 'yowl',
       };
     }
+    if (lower.includes('vacuum') || lower.includes('clean') || lower.includes('noise')) {
+      return {
+        english: `hiss! loud vacuum monster on rug! hiding under bed, meo!`,
+        emotion: 'Vacuum Panic',
+        cue: 'hiss',
+      };
+    }
     return {
-      english: `meo... slow disappointed blink. bring treats now, meo.`,
-      emotion: 'Slow Blink',
+      english: `meo... unblinking stare of mild judgment. bring treats immediately, meo.`,
+      emotion: 'Judgment Blink',
       cue: 'meow',
     };
   }
 
   // --- 5. SAMSUNG (Scout Hound) ---
   if (persona.id === '5') {
-    if (lower.includes('walk') || lower.includes('outside')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
       return {
-        english: `bow bow! leash clicked! open the door please, bow!`,
-        emotion: 'Door Sprint',
+        english: `bow! order smoked bacon strips and crunchy dental chews, bow bow!`,
+        emotion: 'Bacon Scout',
+        cue: 'bark',
+      };
+    }
+    if (lower.includes('walk') || lower.includes('outside') || lower.includes('patrol')) {
+      return {
+        english: `bow bow! perimeter patrol time! let me sniff every tree outside, bow!`,
+        emotion: 'Perimeter Run',
         cue: 'bark',
       };
     }
     return {
-      english: `bow! heard a rustle outside! ears up, sniffing, bow bow!`,
-      emotion: 'Alert Scout',
+      english: `bow! ears perked at 45 degrees, scanning the hallway, all secure, bow!`,
+      emotion: 'Alert Patrol',
       cue: 'bark',
     };
   }
 
-  // --- 6. MISSILE (French Bulldog) ---
+  // --- 6. MISSILE (French Bulldog Sofa Rocket) ---
   if (persona.id === '6') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `snort bow! sweet potato chews and roast chicken jerky, order double, bow!`,
+        emotion: 'Jerky Hype',
+        cue: 'pant',
+      };
+    }
     if (lower.includes('cuddle') || lower.includes('lap') || lower.includes('couch')) {
       return {
-        english: `snort bow! jumped on the couch! cuddles right now, bow!`,
-        emotion: 'Couch Leap',
+        english: `snort bow! sofa missile launched! burrowing directly into blankets, bow!`,
+        emotion: 'Couch Torpedo',
         cue: 'pant',
       };
     }
     return {
-      english: `snort... heavy chin resting on your foot, sleepy bow.`,
-      emotion: 'Foot Pillow',
+      english: `snort... heavy chin resting on your sneaker, sleepy Frenchie bow.`,
+      emotion: 'Foot Snore',
       cue: 'pant',
     };
   }
 
-  // --- 7. MICROWAVE (Ginger Tabby) ---
+  // --- 7. MICROWAVE (Ginger Tabby Box Champion) ---
   if (persona.id === '7') {
-    if (lower.includes('box') || lower.includes('play')) {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
       return {
-        english: `meo meo! hopped in the box, spinning around fast, purr meo!`,
-        emotion: 'Box Spin',
+        english: `meo meo! crunchy tuna bites AND save the delivery cardboard box for me, purr meo!`,
+        emotion: 'Box & Tuna',
+        cue: 'chirp',
+      };
+    }
+    if (lower.includes('box') || lower.includes('spin') || lower.includes('zoomies')) {
+      return {
+        english: `meo meo! inside the delivery box spinning at 800 RPM, purr meo!`,
+        emotion: 'Box Spin 800RPM',
         cue: 'chirp',
       };
     }
     return {
-      english: `meo! head empty, just purring against your hand, meo!`,
-      emotion: 'Head Rub',
+      english: `meo purr! one orange brain cell vibrating with pure joy, meo!`,
+      emotion: 'Orange Joy',
       cue: 'chirp',
     };
   }
 
-  // --- 8. ASBESTOS (British Shorthair) ---
+  // --- 8. ASBESTOS (Stoic Sphynx / Sentinel) ---
   if (persona.id === '8') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `meo... warm roasted duck shreds served quietly on heated saucer, meo.`,
+        emotion: 'Heated Duck',
+        cue: 'purr',
+      };
+    }
+    if (lower.includes('cold') || lower.includes('warm') || lower.includes('fridge')) {
+      return {
+        english: `purr... refrigerator top has optimal thermal draft. meditating here, meo.`,
+        emotion: 'Fridge Summit',
+        cue: 'purr',
+      };
+    }
     return {
-      english: `purr... sitting on the fridge. staring at the wall, meo.`,
-      emotion: 'Fridge Zen',
+      english: `purr... motionless sentinel observing cosmic dust in absolute stoic silence, meo.`,
+      emotion: 'Stoic Zen',
       cue: 'purr',
     };
   }
 
-  // --- 9. LADY DIMITRESCU (Maine Coon) ---
+  // --- 9. LADY DIMITRESCU (Maine Coon Empress) ---
   if (persona.id === '9') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `purr meo! royal platter of poached ocean trout, fit for an empress, meo!`,
+        emotion: 'Royal Trout Feast',
+        cue: 'purr',
+      };
+    }
     return {
-      english: `purr... big tail swishing slowly. brush my mane, meo.`,
-      emotion: 'Mane Brush',
+      english: `purr... 12kg of feline majesty sprawling across king bed. admire me, meo!`,
+      emotion: 'Empress Stretch',
       cue: 'purr',
     };
   }
 
-  // --- 10. SHANTHA (Gentle Golden) ---
+  // --- 10. SHANTHA (Gentle Therapy Golden) ---
   if (persona.id === '10') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `bow... warm chicken bone broth biscuits, so gentle on the tummy, bow.`,
+        emotion: 'Broth Biscuit',
+        cue: 'woof',
+      };
+    }
+    if (lower.includes('sad') || lower.includes('stress') || lower.includes('love') || lower.includes('hug')) {
+      return {
+        english: `bow... resting my warm chin on your knee. you are loved, take it easy, bow.`,
+        emotion: 'Therapy Chin',
+        cue: 'woof',
+      };
+    }
     return {
-      english: `bow... warm chin on your knee. good human, bow purr.`,
-      emotion: 'Knee Rest',
+      english: `bow... soft tail swish against carpet, looking up with loving eyes, bow.`,
+      emotion: 'Gentle Gaze',
       cue: 'woof',
     };
   }
 
   // --- 11. BOMBASTIC LADY (Poodle Diva) ---
   if (persona.id === '11') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `bow bow darling! organic grass-fed duck tenders with parsley garnish, pure luxury, bow!`,
+        emotion: 'Gourmet Duck Diva',
+        cue: 'bark',
+      };
+    }
     return {
-      english: `bow bow! curls brushed, trotting around proudly, bow!`,
-      emotion: 'Proud Trot',
+      english: `bow bow! pristine salon curls bouncing, high-stepping on the sidewalk runway, bow!`,
+      emotion: 'Runway Diva',
       cue: 'bark',
     };
   }
 
-  // --- 12. BIG MOM (Saint Bernard) ---
+  // --- 12. BIG MOM (90kg Gentle Mastiff) ---
   if (persona.id === '12') {
+    if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best')) {
+      return {
+        english: `woof bow! roasted beef knuckle bone the size of a tree log, drool everywhere, bow!`,
+        emotion: 'Giant Knuckle Bone',
+        cue: 'woof',
+      };
+    }
+    if (lower.includes('hug') || lower.includes('cuddle') || lower.includes('love')) {
+      return {
+        english: `woof bow! 90kg gentle bear hug incoming! prepare for slobbery cuddles, bow!`,
+        emotion: '90kg Bear Hug',
+        cue: 'woof',
+      };
+    }
     return {
-      english: `woof bow... big head in your lap, lots of warm drool, bow!`,
-      emotion: 'Big Lap Rest',
+      english: `woof bow... big fluffy head resting in your lap, happily snoring, bow.`,
+      emotion: 'Lap Snorer',
       cue: 'woof',
     };
   }
 
-  // Default
+  // Generic species fallback
   const isCat = persona.species === 'Cat';
+  if (lower.includes('order') || lower.includes('food') || lower.includes('treat') || lower.includes('best') || lower.includes('eat')) {
+    return {
+      english: isCat
+        ? `meo purr! order salmon pâté or tuna flakes, never dry kibble, meo!`
+        : `bow bow! order peanut butter crunchies or beef marrow bone, bow!`,
+      emotion: isCat ? 'Gourmet Meo' : 'Treat Hype',
+      cue: isCat ? 'purr' : 'bark',
+    };
+  }
+
   return {
     english: isCat
-      ? `meo purr! soft headbutt against your fingers, pet me, meo!`
-      : `bow bow! tail wagging happily, scratching ears feels good, bow!`,
+      ? `meo purr! soft headbutt against your hand. chin scratches please, meo!`
+      : `bow bow! tail wagging happily, excited to be with you, bow!`,
     emotion: isCat ? 'Affectionate Meo' : 'Happy Wag',
     cue: isCat ? 'purr' : 'bark',
   };
